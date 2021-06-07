@@ -1,0 +1,53 @@
+.form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 15px;
+}
+
+.form-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.form button {
+  background-color: green;
+  border: 2px solid black;
+  border-radius: 25px;
+  padding: 20px;
+  margin: 10px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.login-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 200px;
+}
+
+.login {
+  text-decoration: none;
+  font-size: 35px;
+  padding: 20px;
+  color: #fff;
+  border: 3px solid black;
+  border-radius: 25px;
+  background-color: red;
+  margin: 0 auto;
+}
+
+.inputs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+  padding: 20px;
+}
+.inputs > label {
+  padding: 10px;
+}
