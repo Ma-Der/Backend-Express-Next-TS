@@ -2,8 +2,6 @@ import { Request, Response } from 'express';
 import { ICartItemData } from '../Types/cartItemTypes';
 import { CartHandler } from '../Services/cartHandler';
 
-// stworzenie katalogu Validation i oddzielnych plików tam, w zależności od potrzeb
-
 // dorobienie rzeczy opcjonalnych - user, discount, products
 
 export class CartController {

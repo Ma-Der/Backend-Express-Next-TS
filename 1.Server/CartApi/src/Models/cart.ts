@@ -1,7 +1,7 @@
 import { ICart } from '../Types/cartTypes';
 import { ICartItem, ICartItemData } from '../Types/cartItemTypes';
 import { CartItem } from '../Models/cartItem';
-import { IProduct } from '../Types/dbTypes';
+import { IProduct } from '../Types/productTypes';
 
 export class Cart implements ICart {
     cartItems: ICartItem[];
