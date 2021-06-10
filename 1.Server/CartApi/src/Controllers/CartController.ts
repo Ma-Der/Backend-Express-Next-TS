@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
-import { ICartItemData } from '../Types/cartItemTypes';
+import { IProduct } from '../Types/productTypes';
 import { CartHandler } from '../Services/cartHandler';
 
 // dorobienie rzeczy opcjonalnych - user, discount, products
 
 export class CartController {
 
-    public static addProductToCart(req: Request<{}, {}, { product: ICartItemData, amountOfProduct: number }>, res: Response) {
+    public static addProductToCart(req: Request<{}, {}, { product: IProduct, amountOfProduct: number }>, res: Response) {
         try {
             const { product, amountOfProduct } = req.body
             const result = CartHandler.addToCart(product, amountOfProduct);

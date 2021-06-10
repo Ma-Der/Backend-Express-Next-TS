@@ -1,5 +1,5 @@
 import { ICartItem, ICartItemData } from './cartItemTypes';
-import { IProduct } from './dbTypes';
+import { IProduct } from './productTypes';
 
 export interface ICart {
     cartItems: ICartItem[];
@@ -7,7 +7,7 @@ export interface ICart {
     checkCart(): ICartItemData[];
     clearCart(): ICartItemData[];
     getCartData(): ICartItemData[];
-    deleteProduct(productId: string): ICartItemData[];
+    deleteProduct(productId: string): ICartItem[];
     modifyAmountOfProductInCart(productId: string, amount: number): ICartItemData[];
     calculateCart(): number;
 }

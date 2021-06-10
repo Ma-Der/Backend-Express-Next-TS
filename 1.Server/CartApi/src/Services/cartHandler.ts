@@ -1,9 +1,9 @@
-import { ICartItemData } from '../Types/cartItemTypes';
+import { IProduct } from '../Types/productTypes';
 import { products, cart } from '../Models/db/database';
 
 export class CartHandler {
 
-    public static addToCart(product: ICartItemData, amount: number) {
+    public static addToCart(product: IProduct, amount: number) {
         if(!this.isProductExist(product.id)) throw new Error('Product does not exists.')
         const item = products.find(item => item.id === product.id);
         if(item) cart.addProduct(item, amount);

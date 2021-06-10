@@ -1,7 +1,8 @@
+import { IProductData } from "./productTypes";
+
 export interface ICartItem {
     id: string;
-    productName: string;
-    productPrice: number;
+    product: IProductData;
     amountOfProduct: number;
     changeProductName(newName: string): void;
     changeProductPrice(newPrice: number): void;

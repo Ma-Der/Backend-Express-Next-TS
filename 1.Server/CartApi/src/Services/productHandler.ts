@@ -8,6 +8,7 @@ export class ProductHandler {
         
         const newProduct = new Product(productName, productPrice);
         products.push(newProduct);
+        return newProduct.getProductData();
     }
 
     public static changeProductName(productId: string, newProductName: string) {
@@ -15,6 +16,8 @@ export class ProductHandler {
 
         const productToUpdate = products.find(({ id }) => id === productId);
         productToUpdate?.changeProductName(newProductName);
+
+        return productToUpdate?.getProductData();
     }
 
     public static changeProductPrice(productId: string, newProductPrice: number) {
@@ -22,12 +25,16 @@ export class ProductHandler {
 
         const productToUpdate = products.find(({ id }) => id === productId);
         productToUpdate?.changeProductPrice(newProductPrice);
+
+        return productToUpdate?.getProductData();
     }
 
     public static deleteProduct(productId: string) {
         if(!this.isProductExists(productId)) throw new Error("Product does not exists.");
 
         const arrOfProducts = products.filter(product => product.id !== productId);
+
+        return this.getAllProducts();
     }
 
     public static getAllProducts() {

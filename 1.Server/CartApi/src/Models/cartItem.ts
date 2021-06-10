@@ -1,27 +1,26 @@
+import { IProduct } from '../Types/productTypes';
 import { v4 as uuidv4} from 'uuid';
 import { ICartItem, ICartItemData } from '../Types/cartItemTypes';
 
 export class CartItem implements ICartItem{
     id: string;
-    productName: string;
-    productPrice: number;
+    product: IProduct;
     amountOfProduct: number;
 
-    constructor(productName: string, productPrice: number, amountOfProduct: number) {
+    constructor(product: IProduct, amountOfProduct: number) {
         this.id = uuidv4();
-        this.productName = productName;
-        this.productPrice = productPrice;
+        this.product = product;
         this.amountOfProduct = amountOfProduct;
     }
 
     changeProductName(newName: string): void {
         this.isStringEmpty(newName);
-        this.productName = newName;
+        this.product.productName = newName;
     }
 
     changeProductPrice(newPrice: number): void {
         this.isNumberPositive(newPrice);
-        this.productPrice = newPrice;
+        this.product.productPrice = newPrice;
     }
     changeAmountOfProduct(newAmount: number): void {
         this.isNumberPositive(newAmount);
@@ -31,14 +30,14 @@ export class CartItem implements ICartItem{
     getCartItemData(): ICartItemData {
         return {
             id: this.id,
-            productName: this.productName,
-            productPrice: this.productPrice,
+            productName: this.product.productName,
+            productPrice: this.product.productPrice,
             amountOfProduct: this.amountOfProduct
         }
     }
 
     calculatePrice(): number {
-        return this.productPrice * this.amountOfProduct;
+        return this.product.productPrice * this.amountOfProduct;
     }
 
     private isStringEmpty(string:string) {
