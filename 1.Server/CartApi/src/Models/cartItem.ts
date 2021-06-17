@@ -1,6 +1,7 @@
 import { IProduct } from '../Types/productTypes';
 import { v4 as uuidv4} from 'uuid';
 import { ICartItem, ICartItemData } from '../Types/cartItemTypes';
+import { Validation } from '../Validation/Validation';
 
 export class CartItem implements ICartItem{
     id: string;
@@ -19,11 +20,11 @@ export class CartItem implements ICartItem{
     }
 
     changeProductPrice(newPrice: number): void {
-        this.isNumberPositive(newPrice);
+        Validation.isPositiveNumber(newPrice);
         this.product.productPrice = newPrice;
     }
     changeAmountOfProduct(newAmount: number): void {
-        this.isNumberPositive(newAmount);
+        Validation.isPositiveNumber(newAmount);
         this.amountOfProduct = newAmount;
     }
 
@@ -42,9 +43,5 @@ export class CartItem implements ICartItem{
 
     private isStringEmpty(string:string) {
         if(string='') throw new Error('String is empty.');
-    }
-
-    private isNumberPositive(number:number) {
-        if(number < 0) throw new Error("Number is not positive");
     }
 }

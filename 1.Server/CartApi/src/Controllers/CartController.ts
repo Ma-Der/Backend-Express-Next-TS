@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { IProduct } from '../Types/productTypes';
 import { CartHandler } from '../Services/cartHandler';
 
-// dorobienie rzeczy opcjonalnych - user, discount, products
+// dorobienie rzeczy opcjonalnych - user, discount
 
 export class CartController {
 

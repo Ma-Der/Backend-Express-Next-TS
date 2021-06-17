@@ -2,6 +2,7 @@ import express, { Express } from 'express';
 import dotenv from 'dotenv';
 import cartRoutes from '../Routes/cartRoutes';
 import productRoutes from '../Routes/productRoutes';
+import discountRoutes from '../Routes/discountRoutes';
 
 dotenv.config();
 
@@ -10,6 +11,7 @@ export const initializeServer = (): Express => {
     app.use(express.json());
     app.use("/cart", cartRoutes.router);
     app.use("/product", productRoutes.router);
+    app.use("/discount", discountRoutes.router);
 
     startServer(app);
     return app;

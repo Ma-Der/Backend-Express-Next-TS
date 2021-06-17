@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { IDiscountCodeData } from '../Types/discountsTypes';
 import { ProductHandler } from '../Services/productHandler';
 
 export class ProductController {
@@ -57,5 +58,19 @@ export class ProductController {
         catch(err) {
             return res.status(400).json(err.message);
         }
+    }
+
+    public static addDiscountToProduct(req: Request<{id: string}, {}, IDiscountCodeData>, res: Response) {
+        try {
+            const { id } = req.params;
+            const { value } = req.body;
+    
+            const productWithDiscount = ProductHandler.addDiscountToProduct(id, value);
+            return res.status(200).json(productWithDiscount);
+        }
+        catch(err) {
+            return res.status(400).json(err.message);
+        }
+
     }
 }

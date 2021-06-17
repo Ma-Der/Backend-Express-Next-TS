@@ -11,10 +11,10 @@ class CartRoutes {
     }
 
     createRoutes() {
-        this.router.put("/add", CartController.addProductToCart);
+        this.router.post("/add", CartController.addProductToCart);
         this.router.get("/check", CartController.checkCart);
         this.router.delete("/delete", CartController.deleteProductFromCart);
-        this.router.post("/:id", CartController.changeProductAmount);
+        this.router.put("/:id", CartController.changeProductAmount);
         this.router.post("/buy", CartController.buyCart);
     }
 

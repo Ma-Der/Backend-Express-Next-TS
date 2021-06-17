@@ -11,10 +11,11 @@ class ProductRoutes {
 
     createRoutes() {
         this.router.post("/create", ProductController.createProduct);
-        this.router.put("/updateName", ProductController.changeProductName);
-        this.router.put("/updatePrice", ProductController.changeProductPrice);
-        this.router.delete("/delete", ProductController.deleteProduct);
+        this.router.put("/updateName/:id", ProductController.changeProductName);
+        this.router.put("/updatePrice/:id", ProductController.changeProductPrice);
+        this.router.delete("/delete/:id", ProductController.deleteProduct);
         this.router.get("/getAll", ProductController.getAllProducts);
+        this.router.put("/discount/:id", ProductController.addDiscountToProduct);
     }
 }
 
