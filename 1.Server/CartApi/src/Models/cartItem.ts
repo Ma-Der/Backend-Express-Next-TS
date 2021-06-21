@@ -14,15 +14,6 @@ export class CartItem implements ICartItem{
         this.amountOfProduct = amountOfProduct;
     }
 
-    changeProductName(newName: string): void {
-        this.isStringEmpty(newName);
-        this.product.productName = newName;
-    }
-
-    changeProductPrice(newPrice: number): void {
-        Validation.isPositiveNumber(newPrice);
-        this.product.productPrice = newPrice;
-    }
     changeAmountOfProduct(newAmount: number): void {
         Validation.isPositiveNumber(newAmount);
         this.amountOfProduct = newAmount;
@@ -30,7 +21,7 @@ export class CartItem implements ICartItem{
 
     getCartItemData(): ICartItemData {
         return {
-            id: this.id,
+            cartItemId: this.id,
             productName: this.product.productName,
             productPrice: this.product.productPrice,
             amountOfProduct: this.amountOfProduct
@@ -39,9 +30,5 @@ export class CartItem implements ICartItem{
 
     calculatePrice(): number {
         return this.product.productPrice * this.amountOfProduct;
-    }
-
-    private isStringEmpty(string:string) {
-        if(string='') throw new Error('String is empty.');
     }
 }

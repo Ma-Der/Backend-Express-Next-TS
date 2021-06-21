@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import cartRoutes from '../Routes/cartRoutes';
 import productRoutes from '../Routes/productRoutes';
 import discountRoutes from '../Routes/discountRoutes';
+import userRoutes from '../Routes/userRoutes';
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ export const initializeServer = (): Express => {
     app.use("/cart", cartRoutes.router);
     app.use("/product", productRoutes.router);
     app.use("/discount", discountRoutes.router);
+    app.use("/user", userRoutes.router);
 
     startServer(app);
     return app;

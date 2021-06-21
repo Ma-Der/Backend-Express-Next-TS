@@ -1,16 +1,21 @@
-import { ICart } from '../Types/cartTypes';
-import { ICartItem, ICartItemData } from '../Types/cartItemTypes';
+import { ICart, ICartData } from '../Types/cartTypes';
+import { ICartItem } from '../Types/cartItemTypes';
 import { CartItem } from '../Models/cartItem';
 import { IProduct } from '../Types/productTypes';
+import { IDiscountCode } from '../Types/discountsTypes';
 
 export class Cart implements ICart {
+    id: string;
     cartItems: ICartItem[];
+    discountCode: IDiscountCode;
 
-    constructor() {
+    constructor(id: string, discountCode: IDiscountCode = {key: 'noDiscount', value: 0}) {
+        this.id = id;
         this.cartItems = [];
+        this.discountCode = discountCode;    
     }
 
-    addProduct(product: IProduct, amountOfProduct: number): ICartItemData[] {
+    addProduct(product: IProduct, amountOfProduct: number): ICartData {
         const item = this.cartItems.find(item => item.id === product.id);
 
         if(item) {
@@ -24,20 +29,20 @@ export class Cart implements ICart {
         return this.getCartData();
     }
 
-    deleteProduct(productId: string) {
+    deleteProduct(productId: string): ICartItem[] {
 
         const newCartList = this.cartItems.filter(product => product.id !== productId)
         return newCartList;
     }
 
-    modifyAmountOfProductInCart(productId: string, amount: number): ICartItemData[] {
+    modifyAmountOfProductInCart(productId: string, amount: number): ICartData {
         const product = this.cartItems.find(item => item.id === productId);
         if(!product) throw new Error("Product does not exist.")
         product.changeAmountOfProduct(amount);
         return this.getCartData();
     }
 
-    checkCart(): ICartItemData[] {
+    checkCart(): ICartData {
         return this.getCartData();
     }
 
@@ -49,14 +54,23 @@ export class Cart implements ICart {
         return finalPrice;
     }
 
-    clearCart() {
+    clearCart(): ICartData {
         this.cartItems = [];
         return this.getCartData();
     }
 
-    getCartData(): ICartItemData[] {
+    addDiscountCode(discountCode: IDiscountCode) {
+        this.discountCode = discountCode;
+        return this.getCartData();
+    }
+
+    getCartData(): ICartData {
         const cartData = this.cartItems.map(item => item.getCartItemData());
-        return cartData;
+        return { 
+            id: this.id,
+            cartItems: cartData,
+            cartDiscount: this.discountCode.value
+         };
     }
 
 }

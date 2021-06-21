@@ -4,15 +4,13 @@ export interface ICartItem {
     id: string;
     product: IProductData;
     amountOfProduct: number;
-    changeProductName(newName: string): void;
-    changeProductPrice(newPrice: number): void;
     changeAmountOfProduct(newAmount: number): void;
     calculatePrice(): number;
     getCartItemData(): ICartItemData;
 }
 
 export interface ICartItemData {
-    id: string;
+    cartItemId: string;
     productName: string;
     productPrice: number;
     amountOfProduct: number;

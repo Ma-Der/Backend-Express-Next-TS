@@ -11,11 +11,12 @@ class CartRoutes {
     }
 
     createRoutes() {
-        this.router.post("/add", CartController.addProductToCart);
-        this.router.get("/check", CartController.checkCart);
-        this.router.delete("/delete", CartController.deleteProductFromCart);
-        this.router.put("/:id", CartController.changeProductAmount);
-        this.router.post("/buy", CartController.buyCart);
+        this.router.post("/:cartId", CartController.addProductToCart);
+        this.router.get("/:cartId", CartController.checkCart);
+        this.router.delete("/:cartId&:productId", CartController.deleteProductFromCart);
+        this.router.put("/:cartId&productId", CartController.changeProductAmount);
+        this.router.post("/buy/:cartId", CartController.buyCart);
+        this.router.put("/discount/:cartId", CartController.addDiscountToCart);
     }
 
 }
