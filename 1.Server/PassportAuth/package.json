@@ -1,0 +1,38 @@
+{
+  "name": "PassportAuth",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"bash run_dev_server.sh\" \"nodemon\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/express": "^4.17.12",
+    "@types/passport": "^1.0.6",
+    "@types/passport-facebook": "^2.1.10",
+    "@types/passport-google-oauth20": "^2.0.8",
+    "@types/passport-local": "^1.0.33",
+    "concurrently": "^6.2.0",
+    "dotenv": "^10.0.0",
+    "esbuild": "^0.12.9",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.7",
+    "passport-facebook": "^3.0.0",
+    "passport-github2": "^0.1.12",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-local": "^1.0.0",
+    "typescript": "^4.3.4"
+  },
+  "dependencies": {
+    "@types/passport-github2": "^1.2.4",
+    "bcrypt": "^5.0.1",
+    "ejs": "^3.1.6",
+    "mongodb-client-encryption": "^1.2.5",
+    "mongoose": "^5.12.15",
+    "passport": "^0.4.1"
+  }
+}
