@@ -1,0 +1,23 @@
+{
+  "name": "webhookcontroler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"bash run_dev_server.sh\" \"nodemon\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/express": "^4.17.12",
+    "@types/uuid": "^8.3.1",
+    "axios": "^0.21.1",
+    "concurrently": "^6.2.0",
+    "esbuild": "^0.12.14",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.9",
+    "typescript": "^4.3.5",
+    "uuid": "^8.3.2"
+  }
+}
