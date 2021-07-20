@@ -14,7 +14,7 @@ export class PageHandler {
     }
 
     public static loadPage3() {
-        const email3 = emailArray[0];
+        const email3 = emailArray[2];
         if(!email3) throw new Error("No such email.");
         return email3;
     }

@@ -6,7 +6,7 @@ export interface IEmailData {
     to: string;
     counter: number;
     switch: boolean;
-    msg: string;
+    text: string;
 }
 
 const email1 = new Email('eco_derma@poczta.onet.pl', 'http://localhost:3000/page1');

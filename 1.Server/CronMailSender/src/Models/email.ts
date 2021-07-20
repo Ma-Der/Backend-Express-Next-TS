@@ -6,7 +6,7 @@ export interface IEmail {
     to: string;
     counter: number;
     switch: boolean;
-    msg: string;
+    text: string;
     counterIncrease(): void;
     switchOff(): void;
     switchOn(): void;
@@ -16,14 +16,14 @@ export interface IEmail {
 export class Email implements IEmail {
     id: string;
     to: string;
-    msg: string;
+    text: string;
     switch: boolean;
     counter: number;
 
-    constructor(to: string, msg: string) {
+    constructor(to: string, text: string) {
         this.id = uuidv4();
         this.to = to;
-        this.msg = msg;
+        this.text = text;
         this.switch = true;
         this.counter = 0;
     }
@@ -44,7 +44,7 @@ export class Email implements IEmail {
         return {
             id: this.id,
             to: this.to,
-            msg: this.msg,
+            text: this.text,
             switch: this.switch,
             counter: this.counter
         }

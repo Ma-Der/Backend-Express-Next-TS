@@ -1,6 +1,7 @@
 import { Router } from 'express';
-import { CronController } from '../Controllers/CronController';
+import { EmailController } from '../Controllers/EmailController';
 import { PageController } from '../Controllers/PageController';
+import { NodemailerController } from '../Controllers/NodemailerController';
 
 class CronRoutes {
     router: Router;
@@ -10,11 +11,13 @@ class CronRoutes {
     }
 
     createRoutes() {
-        this.router.put('/stop/:emailNmr', CronController.stopSendEmail);
-        this.router.get('/stop/:emailNmr', CronController.showEmail)
+        this.router.post('/:emailNmr', EmailController.incrementCounter);
+        this.router.get("/", NodemailerController.sendMail);
+        this.router.post('/stop/:emailNmr', EmailController.stopSendEmail);
+        this.router.get('/stop/:emailNmr', EmailController.showEmail);
         this.router.get('/page1', PageController.loadPage1);
-        this.router.get('/page2', PageController.loadPage2)
-        this.router.get('/page3', PageController.loadPage3)
+        this.router.get('/page2', PageController.loadPage2);
+        this.router.get('/page3', PageController.loadPage3);
     }
 
 }
