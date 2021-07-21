@@ -5,7 +5,7 @@ const cron = require('node-cron');
 
 export class NodemailerHandler {
     public static send() {
-        cron.schedule('10 * * * *', this.getMails);
+        cron.schedule('*/1 * * * *', this.getMails);
     }
 
     private static getMails() {

@@ -8,6 +8,8 @@
 <body>
     <h1>Hello from Email1</h1>
     <h4>If you want to stop getting this email, click below</h4>
-    <a href="http://localhost:3000/stop/<%= mail.id %>">Stop Getting This Stupid Email</a>
+    <form action="http://localhost:3000/stop/<%= mail.id %>" method="POST">
+        <button type="submit">Stop Getting This Stupid Email</button>
+    </form>
 </body>
 </html>
