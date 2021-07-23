@@ -8,12 +8,13 @@ export class EmailHandler {
 
     public static async sendMail(emailId: string) {
 
-        const emailToSend = emailDB.find(({id}) => id === emailId);
+        const emailToSend = await emailDB.find(({id}) => id === emailId);
+        console.log(emailToSend)
         if(!emailToSend) throw new Error("There is no such email in database.");
 
-        const encryptedMessage = await this.cryptoService.encryptEmail(emailToSend.id, emailToSend.text);
+        const encryptedMessage = await this.cryptoService.encryptEmail(emailToSend.to, emailToSend.text);
         emailToSend.changeText(encryptedMessage);
-
+        console.log(encryptedMessage)
         const emailSender = new EmailSender(emailToSend);
         emailSender.sendEmail();
         return emailToSend;
@@ -21,7 +22,7 @@ export class EmailHandler {
     }
 
     public static async decryptEmail(email: IEmailData) {
-        const decryptedMessage = await this.cryptoService.decryptEmail(email.id, email.text);
+        const decryptedMessage = await this.cryptoService.decryptEmail(email.to, email.text);
 
         return {
             id: email.id,

@@ -19,7 +19,7 @@ export class CryptoService {
 
     private async generateKeys(email: string, passphrase: string) {
         return openpgp.generateKey({
-            userIDs: [{name: 'user', email: email}],
+            userIDs: [{name: 'some', email: email}],
             passphrase: passphrase
         });
     }

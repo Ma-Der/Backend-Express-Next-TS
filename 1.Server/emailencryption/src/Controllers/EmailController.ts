@@ -7,7 +7,7 @@ export class EmailController {
         try {
             const { emailId } = req.params;
 
-            const email = EmailHandler.sendMail(emailId);
+            const email = await EmailHandler.sendMail(emailId);
             console.log(email);
             return res.status(200).json('Encrypted email has been sent.');
         }
