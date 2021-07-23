@@ -1,4 +1,6 @@
 import { Router } from 'express';
+import { EmailController } from '../Controllers/EmailController';
+import { PageController } from '../Controllers/PageController';
 
 class EncryptRouter {
     router: Router;
@@ -9,7 +11,9 @@ class EncryptRouter {
     }
 
     createRoutes() {
-
+        this.router.get("/", PageController.loadPage);
+        this.router.get('/send/:emailId', EmailController.sendEmail);
+        this.router.get('/decrypt', EmailController.decryptEmail);
     }
 }
 

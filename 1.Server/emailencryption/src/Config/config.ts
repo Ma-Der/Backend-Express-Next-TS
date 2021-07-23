@@ -7,6 +7,8 @@ dotenv.config();
 export const initializeServer = (): Express => {
     const app = express();
 
+    app.set("view engine", "ejs");
+    app.set("views", "src/Views");
     app.use(express.json());
 
     app.use("/", encryptRoutes.router);

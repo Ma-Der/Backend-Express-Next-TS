@@ -1,33 +1,27 @@
 import * as openpgp from 'openpgp';
 import { passphrase } from '../Config/envVariables';
 
+
 export class CryptoService {
 
-    private publicKeyArmored = `------BEGIN PGP PUBLIC KEY BLOCK-----
-    sdadasdasdsadsdsdsadsadsdsdsadasdasdsda342325efdsdsad*&&%$%DRShjdsdsdas
-    -----END PGP PUBLIC KEY BLOCK-----`;
-
-    private privateKeyArmored = `------BEGIN PGP PUBLIC KEY BLOCK-----
-    lkljjashfjjdlskld;kld:KSDjlkjNJKsdl;kdklksdkjI((F*f8dhsjdknkmnksk))
-    -----END PGP PUBLIC KEY BLOCK-----`;
-
-    private async createPublicKey() {
-        const publicKey = await openpgp.readKey({ armoredKey: this.publicKeyArmored });
+    private async readKey(publicKeyArmored: string) {
+        const publicKey = await openpgp.readKey({ armoredKey: publicKeyArmored });
         return publicKey;
     }
 
-    private async createPrivateKey() {
+    private async decryptKey(privateKeyArmored: string, passphrase: string) {
         const privateKey = await openpgp.decryptKey({
-            privateKey: await openpgp.readPrivateKey({ armoredKey: this.privateKeyArmored }),
+            privateKey: await openpgp.readPrivateKey({ armoredKey: privateKeyArmored }),
             passphrase
         });
         return privateKey;
     }
 
-    private async generateKeys() {
-        const publicKey = await this.createPublicKey();
-        const privateKey = await this.createPrivateKey();
-        return { publicKey, privateKey };
+    private async generateKeys(email: string, passphrase: string) {
+        return openpgp.generateKey({
+            userIDs: [{name: 'user', email: email}],
+            passphrase: passphrase
+        });
     }
 
     private async encryptText(publicKey: openpgp.Key, text: string) {
@@ -37,21 +31,25 @@ export class CryptoService {
         });
     }
 
-    public async encryptEmail(dataToEncrypt: string) {
-        const { publicKey } = await this.generateKeys();
+    public async encryptEmail(email: string, dataToEncrypt: string) {
+        const { publicKey, privateKey } = await this.generateKeys(email, dataToEncrypt);
 
-        const encryptedText = await this.encryptText(publicKey, dataToEncrypt);
+        const publicKeyA = await this.readKey(publicKey);
+        const privateKeyA = await this.decryptKey(privateKey, passphrase as string)
+
+        const encryptedText = await this.encryptText(publicKeyA, dataToEncrypt);
 
         return encryptedText;
     }
 
-    public async decryptEmail(dataToDecrypt: string) {
+    public async decryptEmail(email: string, dataToDecrypt: string) {
         try {
+            const { publicKey, privateKey } = await this.generateKeys(email, dataToDecrypt);
             const message = await openpgp.readMessage({ armoredMessage: dataToDecrypt });
-            const { privateKey } = await this.generateKeys();
+            const privateKeyA = await this.decryptKey(privateKey, passphrase as string);
             const { data: decrypted } = await openpgp.decrypt({
                 message,
-                decryptionKeys: privateKey
+                decryptionKeys: privateKeyA
             });
     
             return decrypted;

@@ -11,7 +11,7 @@ export class EmailHandler {
         const emailToSend = emailDB.find(({id}) => id === emailId);
         if(!emailToSend) throw new Error("There is no such email in database.");
 
-        const encryptedMessage = await this.cryptoService.encryptEmail(emailToSend.text);
+        const encryptedMessage = await this.cryptoService.encryptEmail(emailToSend.id, emailToSend.text);
         emailToSend.changeText(encryptedMessage);
 
         const emailSender = new EmailSender(emailToSend);
@@ -21,7 +21,7 @@ export class EmailHandler {
     }
 
     public static async decryptEmail(email: IEmailData) {
-        const decryptedMessage = await this.cryptoService.decryptEmail(email.text);
+        const decryptedMessage = await this.cryptoService.decryptEmail(email.id, email.text);
 
         return {
             id: email.id,
