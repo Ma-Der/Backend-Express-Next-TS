@@ -1,4 +1,7 @@
 import { Router } from 'express';
+import { ViewsController } from '../Controllers/ViewsController';
+import { GoogleController } from '../Controllers/GoogleController';
+import { uploadMulter } from '../Services/MulterHandler';
 
 class GoogleRouter {
     router: Router;
@@ -9,7 +12,10 @@ class GoogleRouter {
     }
 
     createRoutes() {
-
+        this.router.get("/", ViewsController.loadIndex);
+        this.router.get("/form", ViewsController.loadForm);
+        this.router.get("/upload", GoogleController.getOAuthCredentials);
+        this.router.post("/upload", uploadMulter.single('file'), GoogleController.upload);
     }
 }
 
