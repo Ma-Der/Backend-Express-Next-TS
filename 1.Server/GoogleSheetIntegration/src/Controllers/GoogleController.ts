@@ -1,22 +1,22 @@
 import { Request, Response } from 'express';
 import { GoogleHandler } from '../Handlers/GoogleHandler';
-import { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, credentials, spreadsheetId } from '../Config/envVariables';
+import { spreadsheetId } from '../Config/envVariables';
+
 import path from 'path';
 
 export class GoogleController {
 
-    static oAuth2Client = GoogleHandler.getGoogleOAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
     public static async upload(req: Request, res: Response) {
         try {
             const fileName = req.file?.filename;
             const mimeType = req.file?.mimetype;
             const filePath = req.file?.path;
             const file = req.file;
-            const { name, surname, email } = req.body;            
+            const { name, surname, email } = req.body;  
+            const { googleDrive, googleSpreadsheetAuth, googleSheets } = await GoogleHandler.googleVariables();          
         
             if(!(fileName && mimeType && filePath)) throw new Error("There is no file to upload.");
 
-            const googleDrive = await GoogleHandler.getGoogleDrive(this.oAuth2Client);
             const mediaData = await GoogleHandler.createMediaData(mimeType, filePath);
             
             const uploadedFile = await GoogleHandler.uploadFileToGoogleDrive(googleDrive, fileName, mimeType, mediaData);
@@ -24,14 +24,10 @@ export class GoogleController {
             const drivePermissions = await GoogleHandler.createDrivePermissions(googleDrive, file);
             const fileDownloadLink = await GoogleHandler.createGoogleDriveDownloadLink(googleDrive, file);
 
-            const googleSpreadsheetAuth = await GoogleHandler.getSpreadsheetAuth(credentials);
-            const googleSheetClient = await GoogleHandler.getSpreadsheetClient(googleSpreadsheetAuth);
-            const googleSheets = await GoogleHandler.getGoogleSheets(googleSheetClient);
             const ipAddress = GoogleHandler.getIp();
-
             const downloadLink = fileDownloadLink.data.webContentLink as string;
+
             const appendedToSheet = await GoogleHandler.appendToGoogleSheet(googleSheets, googleSpreadsheetAuth, spreadsheetId, name, surname, email, ipAddress, downloadLink);
-            console.log(appendedToSheet.data);
 
             GoogleHandler.deleteUploads(filePath);
 
@@ -48,8 +44,9 @@ export class GoogleController {
         try {
             const { code } = req.query;
             console.log(req.query)
+            const { oAuth2Client } = await GoogleHandler.googleVariables();
             
-            const credentials = await GoogleHandler.getOAuthCredentials(this.oAuth2Client, code);
+            const credentials = await GoogleHandler.getOAuthCredentials(oAuth2Client, code);
 
             return res.status(200).render('form');
         }

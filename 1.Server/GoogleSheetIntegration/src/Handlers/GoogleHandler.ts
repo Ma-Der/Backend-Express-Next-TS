@@ -3,6 +3,7 @@ import { GoogleAuth } from 'google-auth-library';
 import { v4 as uuidv4 } from 'uuid';
 import * as fs from 'fs';
 import * as os from 'os';
+import { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, credentials, spreadsheetId } from '../Config/envVariables';
 
 type Media = {
     mimeType: string;
@@ -11,12 +12,30 @@ type Media = {
 
 export class GoogleHandler {
 
-    public static getGoogleOAuth2Client(clientId: string, clientSecret: string, redirectURI: string) {
-        return new google.auth.OAuth2(clientId, clientSecret, redirectURI);
+
+    public static async googleVariables() {
+        const oAuth2Client = await GoogleHandler.getGoogleOAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
+        const googleDrive = await GoogleHandler.getGoogleDrive(oAuth2Client);
+        const googleSpreadsheetAuth = await GoogleHandler.getSpreadsheetAuth(credentials);
+        const googleSheetClient = await GoogleHandler.getSpreadsheetClient(googleSpreadsheetAuth);
+        const googleSheets = await GoogleHandler.getGoogleSheets(googleSheetClient);
+
+        return {
+            oAuth2Client,
+            googleDrive,
+            googleSpreadsheetAuth,
+            googleSheets
+        }
     }
 
-    public static getGoogleDrive(oAuth2Client: Auth.OAuth2Client) {
-        return google.drive({
+
+    public static async getGoogleOAuth2Client(clientId: string, clientSecret: string, redirectURI: string) {
+        const oAuth2 = await new google.auth.OAuth2(clientId, clientSecret, redirectURI);
+        return oAuth2;
+    }
+
+    public static async getGoogleDrive(oAuth2Client: Auth.OAuth2Client) {
+        return await google.drive({
             version: 'v3',
             auth: oAuth2Client
         });
