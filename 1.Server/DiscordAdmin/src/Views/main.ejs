@@ -1,0 +1,41 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/main.css" >
+    <title>Discord Admin Dashboard</title>
+</head>
+<body>
+    <header id="header">
+        <div id="up-bar">
+            <div id="user-account">
+
+            </div>
+        </div>
+        <div id="left-bar">
+            <div class="sign-wrapper">
+                <a href="/invite" target="_blank" rel="noopener noreferrer"><i class="fas fa-plus"></i></a>
+            </div>
+            <div id="choose-guild">
+                <ul>
+                <% commonGuilds.forEach((guild) => { %>
+                        <li class="guild">
+                            <%= guild.name %>
+                        </li>
+                    
+                <% }) %>
+            </ul>
+            </div>
+        </div>
+    </header>
+    <main id="main">
+        <%- include('welcome-main', {guilds: guilds}); %>
+
+    </main>
+    
+
+    <footer id="footer"></footer>
+    <script src="https://kit.fontawesome.com/19b46db47e.js" crossorigin="anonymous"></script>
+</body>
+</html>

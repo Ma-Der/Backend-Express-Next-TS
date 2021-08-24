@@ -1,0 +1,82 @@
+* {
+  margin: 0;
+}
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+#left-bar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: hidden;
+  position: fixed;
+  height: 90vh;
+  width: 5vw;
+  margin-top: 10vh;
+  padding: 15px 0 15px 0;
+  background-color: white;
+  box-shadow: 10px 0px 7px -5px grey;
+}
+#users-guild-list {
+  list-style-type: none;
+  padding-inline-start: 10px;
+}
+
+.guild {
+  padding: 10px 0 10px 0;
+}
+
+#up-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  position: fixed;
+  height: 10vh;
+  width: 100vw;
+  background-color: black;
+  box-shadow: 0 10px 7px -5px yellow;
+  z-index: 10;
+}
+
+#user-account {
+  height: 7vh;
+  width: 3.5vw;
+  background-color: white;
+  margin-right: 45px;
+}
+
+#main {
+  padding: 14vh 0 0 5vw;
+}
+
+#footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  margin-top: 95vh;
+  height: 5vh;
+  width: 100vw;
+  background-color: black;
+  box-shadow: 10px -7px 7px 0px yellow;
+  z-index: -10;
+}
+
+.disabled-link {
+  pointer-events: none;
+  cursor: default;
+}
+
+.sign-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 10px;
+  width: 5px;
+}
+
+.fa-plus {
+  cursor: pointer;
+}

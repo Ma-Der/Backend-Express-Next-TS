@@ -1,0 +1,10 @@
+<h1>Welcome to discord admin dashboard</h1>
+<h3>On the left panel, there is a "+" sign to add bot to one of your guilds (you can add bot only to guilds that you have the correct permission). Once you do that you will be able to manage this guild from this app.</h3>
+<h3>Below there are your guilds that you're a part of</h3>
+<% guilds.forEach((guild) => { %>
+    <ul id="users-guild-list">
+        <li class="guild">
+            <%= guild.name %>
+        </li>
+    </ul>
+<% }) %>
