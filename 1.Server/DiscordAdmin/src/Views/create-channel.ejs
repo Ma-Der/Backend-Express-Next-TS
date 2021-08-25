@@ -1,0 +1,48 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/create-channel.css" >
+    <title>Create Channel</title>
+</head>
+<body>
+    <div><a href="/dashboard/<%= guildId %>/guild-menu" class="go-back">Go Back</a></div>
+    <h1>Create Channel</h1>
+    <h3>All parameters are optional excluding 'name'.</h3>
+
+    <form action="/dashboard//guild/<%= guildId %>/channels" method="POST" class="form">
+        <label for="name">Name </label>
+        <input type="text" name="name" id="name" required>
+        <label for="channel-type">Choose channel type </label>
+        <select name="type" id="channel-type">
+            <option value="0">Text Channel</option>
+            <option value="1">Direct Message between users</option>
+            <option value="2">Voice Channel</option>
+            <option value="3">Direct Message between multiple users</option>
+            <option value="4">Organizational Category</option>
+            <option value="5">News Channel</option>
+            <option value="6">Store Channel</option>
+            <option value="10">Temp Channel within news channel</option>
+            <option value="11">Temp Channel within text channel</option>
+            <option value="12">Private Temp Channel within text channel</option>
+            <option value="13">Voice Channel for hosting events</option>
+        </select>
+        <label for="topic">Topic </label>
+        <input type="text" id="topic" name="topic">
+        <label for="bitrate">Bitrate</label>
+        <input type="number" id="bitrate" name="bitrate">
+        <label for="user-limit">User Limit</label>
+        <input type="number" id="user-limit" name="user_limit">
+        <label for="rate-limit-per-user">Rate Limit Per User</label>
+        <input type="number" id="rate-limit-per-user" name="rate_limit_per_user">
+        <label for="position">Position</label>
+        <input type="number" id="position" name="position">
+        <label for="parent-id">Parent Id</label>
+        <input type="text" id="parent-id" name="parent_id">
+        <label for="nsfw">NSFW</label>
+        <input type="text" id="nsfw" name="nsfw">
+        <button type="submit">Create Channel</button>
+    </form>
+</body>
+</html>

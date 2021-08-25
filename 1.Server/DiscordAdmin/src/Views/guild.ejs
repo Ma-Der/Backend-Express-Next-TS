@@ -1,4 +1,38 @@
-
-    <div>
-        
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guild Menu</title>
+</head>
+<body>
+    <div><a href="/dashboard" class="go-back">Go Back</a></div>
+    <div id="channel-list">
+        <a href="/dashboard/guild/<%= guildId %>/channels/create" method="get" class="create-btn btn">Create Channel</a>
+        <ul class="list-of-channels">
+            <% channels.forEach((channel) => { %>
+                <li><div>
+                    <p class=channel-name><%= channel.name %></p>
+                    <a href="/dashboard/channel/<%=channel.id%>/modify" class="modify-btn btn">Modify</a>
+                    <form method="post" action="/dashboard/<%= guildId %>/channels/<%= channel.id %>?_method=DELETE">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit">Delete</button>
+                    </form>
+                </div></li>
+            <% }) %>
+        </ul>
     </div>
+    <div id="roles-list">
+        <a href="" class="create-btn btn">Create Role</a>
+        <ul class="list-of-channels">
+            <% roles.forEach((role) => { %>
+                <li><div>
+                    <p class=role-name><%= role.name %></p>
+                    <a href="/dashboard/role/<%=role.id%>/modify" class="modify-btn btn">Modify</a>
+                    <a href="" method="POST" class="delete-btn btn">Delete</a>
+                </div></li>
+            <% }) %>
+        </ul>
+    </div>
+</body>
+</html>

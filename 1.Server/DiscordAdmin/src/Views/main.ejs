@@ -21,9 +21,8 @@
                 <ul>
                 <% commonGuilds.forEach((guild) => { %>
                         <li class="guild">
-                            <%= guild.name %>
+                            <a href="/dashboard/<%=guild.id%>/guild-menu"><%= guild.name %></a>
                         </li>
-                    
                 <% }) %>
             </ul>
             </div>

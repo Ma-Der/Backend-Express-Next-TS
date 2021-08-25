@@ -5,6 +5,7 @@ import { port, mongoURI } from './envVariables';
 import passport from 'passport';
 import MongoStore from 'connect-mongo';
 import session from 'express-session';
+const methodOverride = require('method-override');
 import { discordStrategy } from '../Services/Passport/passportStrategies';
 import { connectWithMongoDB } from '../Services/MongoDB/mongoConnect';
 import User from '../Services/MongoDB/userModel';
@@ -14,7 +15,7 @@ export const initializeServer = (): Express => {
 
     app.use(express.json());
     app.use(express.urlencoded({extended: true}));
-
+    app.use(methodOverride('_method'));
     app.set("view engine", "ejs");
     app.set("views", path.resolve() + "/src/Views");
     app.use(express.static(path.resolve() + '/src/Public'));

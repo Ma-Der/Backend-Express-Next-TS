@@ -10,6 +10,21 @@ interface IBotGuilds {
     id: string;
 }
 
+type ChannelType = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 10 | 11 | 12 | 13;
+type NSFW = 0 | 1;
+
+interface IChannel {
+    name: string;
+    type?: ChannelType;
+    topic?: string;
+    bitrate?: number;
+    user_limit?: number;
+    rate_limit_per_user?: number;
+    position?: number;
+    parent_id?: string;
+    nsfw?: NSFW;
+}
+
 export class DiscordHandler {
     public static baseUrl = 'https://discord.com/api';
 
@@ -41,7 +56,42 @@ export class DiscordHandler {
                     'Authorization': `Bot ${botToken}`
                 }
             });
+
             return channels.data;
+        }
+        catch(err) {
+            return err;
+        }
+    }
+
+    public static async createChannel(guildId: string, channel: IChannel) {
+        try {
+            const { name, type, topic, bitrate, user_limit, rate_limit_per_user, position, parent_id, nsfw } = channel;
+
+            const newChannel = await axios.post(`${this.baseUrl}/guilds/${guildId}/channels`, {
+                headers: {
+                    'X-Audit-Log-Reason': 'create new channel',
+                    'Authorization': `Bot ${botToken}`
+                }
+            });
+
+            return newChannel.data;
+        }
+        catch(err) {
+            return err;
+        }
+    }
+
+    public static async deleteChannel(channelId: string) {
+        try {
+            const deletedChannel = await axios.delete(`${this.baseUrl}/channels/${channelId}`, {
+                headers: {
+                    'X-Audit-Log-Reason': 'delete channel',
+                    'Authorization': `Bot ${botToken}`
+                }
+            });
+
+            return deletedChannel.data;
         }
         catch(err) {
             return err;
