@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { DiscordHandler } from '../Services/Discord/DiscordHandler';
-import { UserHandler } from '../Services/User/UserHandler';
 import { inviteURL } from '../Config/envVariables';
+import { ChannelType } from '../Services/Discord/DiscordHandler';
 
 export class DiscordController {
 
@@ -46,9 +46,13 @@ export class DiscordController {
         }
     }
 
-    public static async createChannel(req: Request<{guildId: string}>, res: Response) {
+    public static async createChannel(req: Request<{guildId: string}, {}, { name: string, type?: ChannelType, topic?: string, bitrate?: number, user_limit?: number, rate_limit_per_user?: number, position?: number, parent_id?: string, nsfw?: true | false}>, res: Response) {
         try {
+            const { guildId } = req.params;
 
+            const newChannel = await DiscordHandler.createChannel(guildId, req.body);
+
+            return res.render("channel-created", {guildId: guildId});
         }
         catch(err) {
             return res.render("failure", { failure: err.message });
