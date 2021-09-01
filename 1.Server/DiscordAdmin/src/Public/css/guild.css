@@ -1,0 +1,43 @@
+#channel-list {
+  margin: 20px;
+}
+
+.btn {
+  max-width: 100px;
+  max-height: 50px;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  margin: 15px;
+  text-transform: uppercase;
+}
+
+.create-btn {
+  text-decoration: none;
+  color: white;
+  background-color: green;
+}
+
+.modify-btn {
+  text-decoration: none;
+  color: white;
+  background-color: blue;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.delete-btn {
+  background-color: red;
+  color: white;
+}
+
+.channel {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+li {
+  list-style-type: none;
+}

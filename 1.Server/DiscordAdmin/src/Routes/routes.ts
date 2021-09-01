@@ -19,8 +19,13 @@ class Routes {
         this.router.get("/invite", isAuthorized, DiscordController.inviteBot);
 
         this.router.get("/dashboard/guild/:guildId/channels", isAuthorized, DiscordController.getGuildChannels);
+        
         this.router.get("/dashboard/guild/:guildId/channels/create", isAuthorized, DiscordController.getCreateChannel);
         this.router.post("/dashboard/guild/:guildId/channels", isAuthorized, DiscordController.createChannel);
+
+        this.router.get("/dashboard/:guildId/channel/:channelId/modify", isAuthorized, DiscordController.getModifyPage);
+        this.router.patch("/dashboard/:guildId/channel/:channelId", isAuthorized, DiscordController.modifyChannel);
+
         this.router.delete("/dashboard/:guildId/channels/:channelId", isAuthorized, DiscordController.deleteChannel);
         
         this.router.get("/dashboard/guild/:guildId/roles", isAuthorized, DiscordController.getGuildRoles);

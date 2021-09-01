@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { DiscordHandler } from '../Services/Discord/DiscordHandler';
 import { inviteURL } from '../Config/envVariables';
-import { ChannelType } from '../Services/Discord/DiscordHandler';
+import { IChannel } from '../Services/Discord/DiscordHandler';
 
 export class DiscordController {
 
@@ -46,13 +46,38 @@ export class DiscordController {
         }
     }
 
-    public static async createChannel(req: Request<{guildId: string}, {}, { name: string, type?: ChannelType, topic?: string, bitrate?: number, user_limit?: number, rate_limit_per_user?: number, position?: number, parent_id?: string, nsfw?: true | false}>, res: Response) {
+    public static async createChannel(req: Request<{guildId: string}, {}, { name: string, type?: number, topic?: string, rate_limit_per_user?: number, position?: number, parent_id?: string}>, res: Response) {
         try {
             const { guildId } = req.params;
 
             const newChannel = await DiscordHandler.createChannel(guildId, req.body);
 
             return res.render("channel-created", {guildId: guildId});
+        }
+        catch(err) {
+            return res.render("failure", { failure: err.message });
+        }
+    }
+
+    public static async getModifyPage(req: Request<{guildId: string, channelId: string}>, res: Response) {
+        try {
+            const { guildId, channelId } = req.params;
+
+            const channel = await DiscordHandler.getModifyChannel(channelId, guildId);
+
+            return res.render("modify-channel", {channel: channel, guildId: guildId});
+        }
+        catch(err) {
+            return res.render("failure", {failure: err.message});
+        }
+    }
+
+    public static async modifyChannel(req: Request<{guildId: string, channelId: string}, {}, {name: string, position?: number, parent_id?: string, topic?: string, permission_overwrites?: Array<unknown>, nsfw?: boolean, rate_limit_per_user?: number}>, res: Response) {
+        try {
+            const { guildId, channelId } = req.params;
+            const updatedChannel = await DiscordHandler.modifyChannel(channelId, req.body);
+
+            return res.redirect(`/dashboard/${guildId}/guild-menu`);
         }
         catch(err) {
             return res.render("failure", { failure: err.message });

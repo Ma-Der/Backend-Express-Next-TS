@@ -10,18 +10,17 @@ interface IBotGuilds {
     id: string;
 }
 
-export type ChannelType = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 10 | 11 | 12 | 13;
-
 export interface IChannel {
     name: string;
-    type?: ChannelType;
+    type?: number;
     topic?: string;
-    bitrate?: number;
-    user_limit?: number;
     rate_limit_per_user?: number;
     position?: number;
     parent_id?: string;
-    nsfw?: true | false;
+    permission_overwrites?: Array<unknown>;
+    last_message_id?: number;
+    guild_id?: string;
+    nfsw?: boolean;
 }
 
 export class DiscordHandler {
@@ -65,22 +64,17 @@ export class DiscordHandler {
 
     public static async createChannel(guildId: string, channel: IChannel) {
         try {
-            
-            const { name, type, topic, bitrate, user_limit, rate_limit_per_user, position, parent_id, nsfw } = channel;
+            const { name, type, topic, rate_limit_per_user, position, parent_id } = channel;
 
             const arrayOfKeys = await Object.keys(channel);
             const arrayOfValues = await Object.values(channel);
-
             const arrayOfDefinedValues = await this.isDefined(arrayOfValues);
 
-            const object = await this.combineArraysIntoObject(arrayOfKeys, arrayOfDefinedValues);
-
-            const definedObject = await JSON.parse(JSON.stringify(object));
-
-            const integerExist = await this.isDefinedInteger([bitrate, user_limit, rate_limit_per_user, position]);
+            const channelObject = await this.combineArraysIntoObject(arrayOfKeys, arrayOfDefinedValues);
+            const definedChannelObject = await JSON.parse(JSON.stringify(channelObject));
+            const integerExist = await this.isDefinedInteger([rate_limit_per_user, position]);
             
-
-            const newChannel = await axios.post(`${this.baseUrl}/guilds/${guildId}/channels`, definedObject, {
+            const newChannel = await axios.post(`${this.baseUrl}/guilds/${guildId}/channels`, definedChannelObject, {
                 headers: {
                     'X-Audit-Log-Reason': 'create new channel',
                     'Authorization': `Bot ${botToken}`
@@ -88,6 +82,40 @@ export class DiscordHandler {
             });
 
             return newChannel.data;
+        }
+        catch(err) {
+            return err;
+        }
+    }
+
+    public static async getModifyChannel(channelId: string, guildId: string) {
+
+        const guildChannels = await this.getGuildChannels(guildId);
+        const channel = await guildChannels.find(item => item.id === channelId);
+
+        return channel;
+    }
+
+    public static async modifyChannel(channelId: string, channel: IChannel) {
+        try {
+            const { name, type, topic, rate_limit_per_user, position, parent_id } = channel;
+
+            const arrayOfKeys = await Object.keys(channel);
+            const arrayOfValues = await Object.values(channel);
+            const arrayOfDefinedValues = await this.isDefined(arrayOfValues);
+
+            const channelObject = await this.combineArraysIntoObject(arrayOfKeys, arrayOfDefinedValues);
+            const definedChannelObject = await JSON.parse(JSON.stringify(channelObject));
+            const integerExist = await this.isDefinedInteger([rate_limit_per_user, position]);
+
+            const updatedChannel = await axios.patch(`${this.baseUrl}/channels/${channelId}`, definedChannelObject, {
+                headers: {
+                    'X-Audit-Log-Reason': 'modify channel',
+                    'Authorization': `Bot ${botToken}`
+                }
+            });
+
+            return updatedChannel.data;
         }
         catch(err) {
             return err;
@@ -142,16 +170,13 @@ export class DiscordHandler {
 
     private static isDefinedInteger<T>(arr: T[]) {
         arr.forEach(async item => {
-            if(item !== undefined) { await this.isInteger(arr) }
+            if(item !== undefined) { 
+                Number.isInteger(item);  
+                return true;
+            } else throw new Error("All numbers needs to be integers.");
         });
 
         return true;
-    }
-
-    private static isInteger<T>(arr: T[]) {
-        arr.forEach(item => {
-            if(!Number.isInteger(item)) throw new Error("Form error: All numbers needs to be integers.");
-        });
     }
 
     private static combineArraysIntoObject<T, U>(arr1: T[], arr2: U[]) {
