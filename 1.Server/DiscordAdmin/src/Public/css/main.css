@@ -8,8 +8,9 @@ body {
 }
 #left-bar {
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
   overflow: hidden;
   position: fixed;
   height: 90vh;
@@ -26,12 +27,22 @@ body {
 
 .guild {
   padding: 10px 0 10px 0;
+  list-style-type: none;
+}
+
+#choose-guild ul {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 5px;
 }
 
 #up-bar {
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  align-items: flex-end;
+  justify-content: center;
+  flex-direction: column;
   position: fixed;
   height: 10vh;
   width: 100vw;
@@ -42,9 +53,19 @@ body {
 
 #user-account {
   height: 7vh;
-  width: 3.5vw;
-  background-color: white;
+  width: 5vw;
   margin-right: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#user-account a {
+  text-decoration: none;
+  font: 600 16px Arial;
+  color: yellow;
+  width: 100%;
+  text-shadow: 1px 1px green;
 }
 
 #main {
@@ -73,8 +94,14 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 10px;
-  width: 5px;
+  height: 15px;
+  width: 10px;
+  margin: 0 auto;
+}
+
+i {
+  width: 20px;
+  height: 20px;
 }
 
 .fa-plus {

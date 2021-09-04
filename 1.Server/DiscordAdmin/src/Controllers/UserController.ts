@@ -9,8 +9,7 @@ export class UserController {
             
         }
         catch(err) {
-            const failure = err.message;
-            return res.render("failure", failure);
+            return res.render("failure", {failure: err});
         }
     }
     public static async loggedIn(req: Request, res: Response) {
@@ -30,6 +29,17 @@ export class UserController {
         catch(err) {
             const failure = err.message;
             return res.render("failure", failure);
+        }
+    }
+
+    public static async logout(req: Request, res: Response) {
+        try {
+            req.logout();
+
+            return res.redirect("/");
+        }
+        catch(err) {
+            return res.render("failure", { failure: err });
         }
     }
 }

@@ -1,6 +1,8 @@
 import express, { Express } from 'express';
 import path from 'path';
 import routes from '../Routes/routes';
+import channelRoutes from '../Routes/channelRoutes';
+import roleRoutes from '../Routes/roleRoutes';
 import { port, mongoURI } from './envVariables';
 import passport from 'passport';
 import MongoStore from 'connect-mongo';
@@ -46,6 +48,8 @@ export const initializeServer = (): Express => {
     passport.use(discordStrategy);
 
     app.use("/", routes.router);
+    app.use("/dashboard/", channelRoutes.router);
+    app.use("/dashboard/", roleRoutes.router);
 
     connectWithMongoDB();
 

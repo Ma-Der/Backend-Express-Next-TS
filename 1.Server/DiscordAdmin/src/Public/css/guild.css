@@ -2,6 +2,10 @@
   margin: 20px;
 }
 
+#roles-list {
+  margin: 20px;
+}
+
 .btn {
   max-width: 100px;
   max-height: 50px;
@@ -25,6 +29,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  font: 400 13.3333px Arial;
 }
 
 .delete-btn {
@@ -32,9 +37,20 @@
   color: white;
 }
 
+.form-delete {
+  margin: 0;
+}
+
 .channel {
   display: flex;
   align-items: center;
+  flex-direction: row;
+}
+
+.role {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-direction: row;
 }
 

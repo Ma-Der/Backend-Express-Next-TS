@@ -18,7 +18,7 @@ export class DiscordController {
             return res.render("guild", { channels: channels, roles: roles, guildId: guildId });
         }
         catch(err) {
-            return res.render("failure", { failure: err.message });
+            return res.render("failure", { failure: err });
         }
     }
 
@@ -31,7 +31,7 @@ export class DiscordController {
             return res.status(200).json(channels);
         }
         catch(err) {
-            return res.status(400).json(err.message);
+            return res.status(400).json(err);
         }
     }
 
@@ -42,7 +42,7 @@ export class DiscordController {
             return res.render("create-channel", { guildId: guildId });
         }
         catch(err) {
-            return res.render("failure", { failure: err.message });
+            return res.render("failure", { failure: err });
         }
     }
 
@@ -55,7 +55,7 @@ export class DiscordController {
             return res.render("channel-created", {guildId: guildId});
         }
         catch(err) {
-            return res.render("failure", { failure: err.message });
+            return res.render("failure", { failure: err });
         }
     }
 
@@ -68,7 +68,7 @@ export class DiscordController {
             return res.render("modify-channel", {channel: channel, guildId: guildId});
         }
         catch(err) {
-            return res.render("failure", {failure: err.message});
+            return res.render("failure", {failure: err});
         }
     }
 
@@ -80,7 +80,7 @@ export class DiscordController {
             return res.redirect(`/dashboard/${guildId}/guild-menu`);
         }
         catch(err) {
-            return res.render("failure", { failure: err.message });
+            return res.render("failure", { failure: err });
         }
     }
 
@@ -94,7 +94,7 @@ export class DiscordController {
             return res.redirect(`/dashboard/${guildId}/guild-menu`);
         }   
         catch(err) {
-            return res.render("failure", { failure: err.message });
+            return res.render("failure", { failure: err });
         }
     }
 
@@ -110,6 +110,69 @@ export class DiscordController {
         }
         catch(err) {    
             return res.status(400).json(err);
+        }
+    }
+
+    public static async getCreateRolePage(req: Request<{guildId: string}>, res: Response) {
+        try {
+            const { guildId } = req.params;
+
+            return res.render("create-role", { guildId: guildId });
+        }
+        catch(err) {
+            return res.render("failure", { failure: err });
+        }
+    }
+
+    public static async createRole(req: Request<{guildId: string}, {}, {id: string, name: string, permissions: string, color: number, hoist: boolean, mentionable: boolean}>, res: Response) {
+        try {
+            const { guildId } = req.params;
+            const createdRole = await DiscordHandler.createRole(guildId, req.body);
+         
+            return res.redirect(`back`);
+        }
+        catch(err) {
+            return res.render("failure", {failure: err});
+        }
+    }
+
+    public static async getModifyRolePage(req: Request<{guildId: string, roleId: string}>, res: Response) {
+        try {
+            const { guildId, roleId } = req.params;
+
+            const modifiedRole = await DiscordHandler.getModifyRole(guildId, roleId);
+
+            return res.render("modify-role", {role: modifiedRole, guildId: guildId});
+        }
+        catch(err) {
+            return res.render("failure", {failure: err});
+        }
+    }
+
+    public static async modifyRole(req: Request<{guildId: string, roleId: string}, {}, {id: string, name: string, permissions: string, color: number, hoist: boolean, mentionable: boolean}>, res: Response) {
+        try {
+            const { guildId, roleId } = req.params;
+            
+            const modifiedRole = await DiscordHandler.modifyRole(guildId, roleId, req.body);
+            
+            return res.redirect(`back`);
+        }
+        catch(err) {
+            return res.render("failure", {failure: err});
+        }
+    }
+
+    public static async deleteRole(req: Request<{guildId: string, roleId: string}>, res: Response) {
+        try {
+            const { guildId, roleId } = req.params;
+         
+            const deletedRole = await DiscordHandler.deleteRole(guildId, roleId);
+            console.log(deletedRole);
+         
+            return res.redirect(`/dashboard/${guildId}/guild-menu`);
+        }
+        catch(err) {
+            return res.render("failure", {failure: err});
         }
     }
 }

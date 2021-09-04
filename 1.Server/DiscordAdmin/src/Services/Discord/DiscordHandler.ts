@@ -23,6 +23,15 @@ export interface IChannel {
     nfsw?: boolean;
 }
 
+interface IRole {
+    id: string;
+    name: string;
+    permissions: string;
+    color: number;
+    hoist: boolean;
+    mentionable: boolean;
+    }
+
 export class DiscordHandler {
     public static baseUrl = 'https://discord.com/api';
 
@@ -64,7 +73,6 @@ export class DiscordHandler {
 
     public static async createChannel(guildId: string, channel: IChannel) {
         try {
-            const { name, type, topic, rate_limit_per_user, position, parent_id } = channel;
 
             const arrayOfKeys = await Object.keys(channel);
             const arrayOfValues = await Object.values(channel);
@@ -72,7 +80,6 @@ export class DiscordHandler {
 
             const channelObject = await this.combineArraysIntoObject(arrayOfKeys, arrayOfDefinedValues);
             const definedChannelObject = await JSON.parse(JSON.stringify(channelObject));
-            const integerExist = await this.isDefinedInteger([rate_limit_per_user, position]);
             
             const newChannel = await axios.post(`${this.baseUrl}/guilds/${guildId}/channels`, definedChannelObject, {
                 headers: {
@@ -80,7 +87,7 @@ export class DiscordHandler {
                     'Authorization': `Bot ${botToken}`
                 }
             });
-
+            console.log(newChannel)
             return newChannel.data;
         }
         catch(err) {
@@ -98,7 +105,6 @@ export class DiscordHandler {
 
     public static async modifyChannel(channelId: string, channel: IChannel) {
         try {
-            const { name, type, topic, rate_limit_per_user, position, parent_id } = channel;
 
             const arrayOfKeys = await Object.keys(channel);
             const arrayOfValues = await Object.values(channel);
@@ -106,7 +112,8 @@ export class DiscordHandler {
 
             const channelObject = await this.combineArraysIntoObject(arrayOfKeys, arrayOfDefinedValues);
             const definedChannelObject = await JSON.parse(JSON.stringify(channelObject));
-            const integerExist = await this.isDefinedInteger([rate_limit_per_user, position]);
+
+            console.log(definedChannelObject)
 
             const updatedChannel = await axios.patch(`${this.baseUrl}/channels/${channelId}`, definedChannelObject, {
                 headers: {
@@ -152,6 +159,72 @@ export class DiscordHandler {
         }
     }
 
+    public static async createRole(guildId: string, role: IRole) {
+        try {
+            if(!(role.color >= 0 && role.color <= 16777216)) throw new Error("Number is not integer or it's out of range.");
+
+
+            const createdRole = await axios.post(`${this.baseUrl}/guilds/${guildId}/roles`, role, {
+                headers: {
+                    'X-Audit-Log-Reason': 'New Role Created',
+                    'Authorization': `Bot ${botToken}`
+                }
+            });
+             console.log(createdRole)
+            return createdRole.data;
+        }
+        catch(err) {
+            console.log(err)
+            return err;
+        }
+    }
+
+    public static async getModifyRole(guildId: string, roleId: string) {
+        const guildRoles = await this.getGuildRoles(guildId);
+        const role = await guildRoles.find(item => item.id === roleId);
+
+        return role;
+    }
+
+    public static async modifyRole(guildId: string, roleId: string, role: IRole) {
+        try {
+            const { name, permissions, color, hoist, mentionable } = role;
+            if(!(color >= 0 && color <= 16777216)) throw new Error("Number is out of range.");
+                    
+            const modifiedRole = await axios.patch(`${this.baseUrl}/guilds/${guildId}/roles/${roleId}`, role, {
+                headers: {
+                    'X-Audit-Log-Reason': 'Role Modified',
+                    'Authorization': `Bot ${botToken}`
+                }
+            });
+            console.log(modifiedRole);
+            return modifiedRole.data;
+        }
+        catch(err) {
+            console.log(err)
+            return err;
+        }
+        
+
+    }
+
+    public static async deleteRole(guildId: string, roleId: string) {
+        try {
+            const deletedRole = await axios.delete(`${this.baseUrl}/guilds/${guildId}/roles/${roleId}`, {
+                headers: {
+                    'X-Audit-Log-Reason': 'delete role',
+                    'Authorization': `Bot ${botToken}`
+                }
+            });
+            return deletedRole.data;
+        }
+        catch(err) {
+            console.log(err)
+            return err;
+        }
+    }
+
+
     private static isDefined(arr: string[]) {
         let arrayOfDefined: unknown[] = [];
         arr.forEach(item => {
@@ -161,13 +234,13 @@ export class DiscordHandler {
                 } else {
                     arrayOfDefined.push(item); 
                 }
-                
             } else arrayOfDefined.push(undefined);
         })
 
         return arrayOfDefined;
     }
-
+    
+/*
     private static isDefinedInteger<T>(arr: T[]) {
         arr.forEach(async item => {
             if(item !== undefined) { 
@@ -178,7 +251,7 @@ export class DiscordHandler {
 
         return true;
     }
-
+*/
     private static combineArraysIntoObject<T, U>(arr1: T[], arr2: U[]) {
         let object={};
 

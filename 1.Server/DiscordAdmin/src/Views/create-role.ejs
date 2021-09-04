@@ -1,0 +1,39 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/create-role.css" >
+    <title>Create Channel</title>
+</head>
+<body>
+    <div><a href="/dashboard/<%= guildId %>/guild-menu" class="go-back">Go Back</a></div>
+    <h1>Create Channel</h1>
+    <h3>All parameters are optional excluding 'name'.</h3>
+
+    <form action="/dashboard/<%= guildId %>/roles" method="POST" class="form">
+        <label for="name">Name </label>
+        <input type="text" name="name" id="role-create-name" required>
+        
+        <label for="permissions">Permissions </label>
+        <input type="text" id="role-create-permissions" name="permissions">
+        
+        <label for="color">Color </label>
+        <input type="number" id="role-create-color" name="color" min=0 max=16777216 value=0>
+        
+        <label for="hoist">Hoist </label>
+        <select type="text" id="role-create-hoist" name="hoist">
+            <option value=false selected>False</option>
+            <option value=true>True</option>
+        </select>
+        
+        <label for="mentionable">Mentionable </label>
+        <select type="text" id="role-create-mentionable" name="mentionable">
+            <option value=false selected>False</option>
+            <option value=true>True</option>
+        </select>
+
+        <button type="submit">Create Role</button>
+    </form>
+</body>
+</html>

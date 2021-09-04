@@ -9,6 +9,7 @@ req.session.refreshToken = refreshToken;
 
         const user = await User.findOne({discordId: profile.id});
         if(user) {
+            await User.updateOne({guilds: profile.guilds});
             done(null, user);
         } else {
             
@@ -22,8 +23,8 @@ req.session.refreshToken = refreshToken;
             done(null, saveUser);
         }
     }
-    catch(err) {
-        return done(err.message, false);
+    catch(err: any) {
+        return done(err, false);
     }
 
 }

@@ -1,0 +1,65 @@
+* {
+  box-sizing: border-box;
+}
+
+.row {
+  display: flex;
+}
+
+[class*='col-'] {
+  min-height: 1px;
+}
+
+.container {
+  max-width: 1200px;
+  width: 100%;
+  margin: auto;
+}
+
+.col-1 {
+  width: calc((100% / 12) * 1);
+}
+
+.col-2 {
+  width: calc((100% / 12) * 2);
+}
+
+.col-3 {
+  width: calc((100% / 12) * 3);
+}
+
+.col-4 {
+  width: calc((100% / 12) * 4);
+}
+
+.col-5 {
+  width: calc((100% / 12) * 5);
+}
+
+.col-6 {
+  width: calc((100% / 12) * 6) px;
+}
+
+.col-7 {
+  width: calc((100% / 12) * 7) px;
+}
+
+.col-8 {
+  width: calc((100% / 12) * 8) px;
+}
+
+.col-9 {
+  width: calc((100% / 12) * 9) px;
+}
+
+.col-10 {
+  width: calc((100% / 12) * 10) px;
+}
+
+.col-11 {
+  width: calc((100% / 12) * 11) px;
+}
+
+.col-12 {
+  width: calc((100% / 12) * 12) px;
+}

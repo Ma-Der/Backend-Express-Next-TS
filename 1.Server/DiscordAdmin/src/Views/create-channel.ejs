@@ -11,7 +11,7 @@
     <h1>Create Channel</h1>
     <h3>All parameters are optional excluding 'name'.</h3>
 
-    <form action="/dashboard/guild/<%= guildId %>/channels" method="POST" class="form">
+    <form action="/dashboard/<%= guildId %>/channels" method="POST" class="form">
         <label for="name">Name </label>
         <input type="text" name="name" id="name" required>
         <input type="hidden" name="type" id="channel-type" value=0>
