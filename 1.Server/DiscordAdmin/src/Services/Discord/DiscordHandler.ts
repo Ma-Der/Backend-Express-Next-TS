@@ -224,23 +224,80 @@ export class DiscordHandler {
         }
     }
 
-    public static async getChannelMessages(channelId: string, limit: number) {
-        try {
+    public static async getChannelMessages(channelId: string, limit: string) {
+            if(limit === null || limit === undefined || limit === '') throw new Error("Limit needs to be positive integer.");
+
+            const limitNumber = parseInt(limit);
+            const counterModulo = limitNumber%100;
+            const counter = Math.ceil(limitNumber/100);
+
+            if(limitNumber < 0) throw new Error("Message limit needs to be positive number.");
+
+            if(limitNumber === 0) return [];
+
+            if(limitNumber > 100) {
+                let channelMessagesArray = [];
+
+                for(let i=1; i <= counter; i++) {
+                    if(i === 1) {
+                        const channelMessages = await axios.get(`${this.baseUrl}/channels/${channelId}/messages`, {
+                            params: {
+                                limit: 100
+                            },
+                            headers: {
+                                "Authorization": `Bot ${botToken}`
+                            }
+                        });
+                        
+                        if((channelMessages.data).length === 0) return [];
+
+                        channelMessagesArray.push(channelMessages.data);
+
+                    } else if(i === counter && counterModulo !== 0) {
+                        const channelMsgArrFlat = channelMessagesArray.flat();
+                        let channelMsgArrayLastElement = channelMsgArrFlat[channelMsgArrFlat.length-1];
+
+                        const channelMessages = await axios.get(`${this.baseUrl}/channels/${channelId}/messages`, {
+                            params: {
+                                before: channelMsgArrayLastElement.id,
+                                limit: counterModulo
+                            },
+                            headers: {
+                                "Authorization": `Bot ${botToken}`
+                            }
+                        });
+    
+                        channelMessagesArray.push(channelMessages.data);
+
+                    } else {
+                        const channelMsgArrFlat = channelMessagesArray.flat();
+                        let channelMsgArrayLastElement = channelMsgArrFlat[channelMsgArrFlat.length-1];
+
+                        const channelMessages = await axios.get(`${this.baseUrl}/channels/${channelId}/messages`, {
+                            params: {
+                                before: channelMsgArrayLastElement.id,
+                                limit: 100
+                            },
+                            headers: {
+                                "Authorization": `Bot ${botToken}`
+                            }
+                        });
+    
+                        channelMessagesArray.push(channelMessages.data);
+                    }
+                }
+                return channelMessagesArray.flat();
+            }
+
             const channelMessages = await axios.get(`${this.baseUrl}/channels/${channelId}/messages`, {
                 params: {
-                    limit: limit
+                    limit: limitNumber
                 },
                 headers: {
                     "Authorization": `Bot ${botToken}`
                 }
             });
-            console.log(channelMessages)
             return channelMessages.data;
-        }
-        catch(err) {
-            console.log(err);
-            return err;
-        }
     }
 
     public static async deleteMessage(channelId: string, messageId: string) {

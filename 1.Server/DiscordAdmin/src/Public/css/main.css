@@ -5,6 +5,8 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background-color: grey;
+  color: blue;
 }
 #left-bar {
   display: flex;
@@ -14,11 +16,11 @@ body {
   overflow: hidden;
   position: fixed;
   height: 90vh;
-  width: 5vw;
+  width: 12vw;
   margin-top: 10vh;
   padding: 15px 0 15px 0;
-  background-color: white;
-  box-shadow: 10px 0px 7px -5px grey;
+  background-color: lightblue;
+  box-shadow: 10px 0px 7px -5px yellow;
 }
 #users-guild-list {
   list-style-type: none;

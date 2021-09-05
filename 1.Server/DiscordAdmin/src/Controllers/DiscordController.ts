@@ -176,11 +176,10 @@ export class DiscordController {
         }
     }
 
-    public static async getChannelMessages(req: Request<{ guildId: string, channelId: string }, {}, {}, { limit: number }>, res: Response) {
+    public static async getChannelMessages(req: Request<{ guildId: string, channelId: string }, {}, {}, { limit: string }>, res: Response) {
         try {
             const { guildId, channelId } = req.params;
             const { limit } = req.query;
-            console.log(limit)
 
             const channelMessages = await DiscordHandler.getChannelMessages(channelId, limit);
 

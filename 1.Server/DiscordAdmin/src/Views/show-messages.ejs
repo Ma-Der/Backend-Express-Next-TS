@@ -10,13 +10,17 @@
 <body>
     <a href="/dashboard/<%=guildId%>/guild-menu">Go back</a>
     <div class="container">
+        <% if(messages.length === 0) { %>
+            <h4>No messages in this channel.</h4>
+        <% } else { %>
         <ul>
-            <% messages.forEach(message => { %>
+            <% messages.forEach((message, index) => { %>
                 <li class="row"> 
-                    <%- include("message", {message: message, channelId: channelId, guildId: guildId})%>
+                    <%- include("message", {message: message, index: index, channelId: channelId, guildId: guildId})%>
                 </li>
             <% }) %>
         </ul>
+        <% } %>
     </div>
 </body>
 </html>
