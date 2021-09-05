@@ -1,0 +1,14 @@
+<div class="message">
+    <div class="message-element">
+        <label for="message-author">Author </label>
+        <input type="text" value="<%= message.author.username %>" name="message-author" disabled>
+    </div>
+    <div>
+        <label for="message-content">Message </label>
+        <textarea name="message-content" id="content" cols="40" rows="5" disabled><%= message.content %></textarea>
+    </div>
+    <form method="post" action="/dashboard/<%= guildId %>/channels/<%= channelId %>/<%= message.id %>?_method=DELETE">
+        <input type="hidden" name="_method" value="DELETE">
+        <button type="submit">Delete</button>
+    </form>
+</div>

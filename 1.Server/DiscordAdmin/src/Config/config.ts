@@ -3,6 +3,7 @@ import path from 'path';
 import routes from '../Routes/routes';
 import channelRoutes from '../Routes/channelRoutes';
 import roleRoutes from '../Routes/roleRoutes';
+import messageRoutes from '../Routes/MessageRoutes';
 import { port, mongoURI } from './envVariables';
 import passport from 'passport';
 import MongoStore from 'connect-mongo';
@@ -50,6 +51,7 @@ export const initializeServer = (): Express => {
     app.use("/", routes.router);
     app.use("/dashboard/", channelRoutes.router);
     app.use("/dashboard/", roleRoutes.router);
+    app.use("/dashboard/", messageRoutes.router);
 
     connectWithMongoDB();
 

@@ -219,11 +219,45 @@ export class DiscordHandler {
             return deletedRole.data;
         }
         catch(err) {
-            console.log(err)
+            console.log(err);
             return err;
         }
     }
 
+    public static async getChannelMessages(channelId: string, limit: number) {
+        try {
+            const channelMessages = await axios.get(`${this.baseUrl}/channels/${channelId}/messages`, {
+                params: {
+                    limit: limit
+                },
+                headers: {
+                    "Authorization": `Bot ${botToken}`
+                }
+            });
+            console.log(channelMessages)
+            return channelMessages.data;
+        }
+        catch(err) {
+            console.log(err);
+            return err;
+        }
+    }
+
+    public static async deleteMessage(channelId: string, messageId: string) {
+        try {
+            const deletedMessage = await axios.delete(`${this.baseUrl}/channels/${channelId}/messages/${messageId}`, {
+                headers: {
+                    'X-Audit-Log-Reason': 'message deleted',
+                    'Authorization': `Bot ${botToken}`
+                }
+            });
+            return deletedMessage.data;
+        }
+        catch(err) {
+            console.log(err);
+            return err;
+        }
+    }
 
     private static isDefined(arr: string[]) {
         let arrayOfDefined: unknown[] = [];
@@ -240,18 +274,6 @@ export class DiscordHandler {
         return arrayOfDefined;
     }
     
-/*
-    private static isDefinedInteger<T>(arr: T[]) {
-        arr.forEach(async item => {
-            if(item !== undefined) { 
-                Number.isInteger(item);  
-                return true;
-            } else throw new Error("All numbers needs to be integers.");
-        });
-
-        return true;
-    }
-*/
     private static combineArraysIntoObject<T, U>(arr1: T[], arr2: U[]) {
         let object={};
 

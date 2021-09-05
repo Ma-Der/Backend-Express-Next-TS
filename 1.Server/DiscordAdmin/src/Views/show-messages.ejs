@@ -1,0 +1,22 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/grid.css" >
+    <link rel="stylesheet" href="/css/show-messages.css" >
+    <title>Channel Messages</title>
+</head>
+<body>
+    <a href="/dashboard/<%=guildId%>/guild-menu">Go back</a>
+    <div class="container">
+        <ul>
+            <% messages.forEach(message => { %>
+                <li class="row"> 
+                    <%- include("message", {message: message, channelId: channelId, guildId: guildId})%>
+                </li>
+            <% }) %>
+        </ul>
+    </div>
+</body>
+</html>

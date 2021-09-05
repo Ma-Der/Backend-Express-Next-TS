@@ -175,4 +175,32 @@ export class DiscordController {
             return res.render("failure", {failure: err});
         }
     }
+
+    public static async getChannelMessages(req: Request<{ guildId: string, channelId: string }, {}, {}, { limit: number }>, res: Response) {
+        try {
+            const { guildId, channelId } = req.params;
+            const { limit } = req.query;
+            console.log(limit)
+
+            const channelMessages = await DiscordHandler.getChannelMessages(channelId, limit);
+
+            return res.render("show-messages", { messages: channelMessages, guildId: guildId, channelId: channelId });
+        }
+        catch(err) {
+            return res.render("failure", {failure: err});
+        }
+    }
+
+    public static async deleteMessage(req: Request<{ channelId: string, messageId: string }>, res: Response) {
+        try {
+            const { channelId, messageId } = req.params;
+
+            const deletedMessage = await DiscordHandler.deleteMessage(channelId, messageId);
+
+            return res.redirect('back');
+        }
+        catch(err) {
+            return res.render("failure", {failure: err});
+        }
+    }
 }
