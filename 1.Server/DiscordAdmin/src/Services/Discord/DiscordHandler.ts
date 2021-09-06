@@ -30,7 +30,17 @@ interface IRole {
     color: number;
     hoist: boolean;
     mentionable: boolean;
-    }
+}
+
+interface IMessageParams {
+    limit: number;
+    before?: string;
+}
+
+interface IMessage {
+    id: string;
+    content: string;
+}
 
 export class DiscordHandler {
     public static baseUrl = 'https://discord.com/api';
@@ -297,6 +307,7 @@ export class DiscordHandler {
                     "Authorization": `Bot ${botToken}`
                 }
             });
+            console.log(channelMessages.data);
             return channelMessages.data;
     }
 
@@ -314,6 +325,61 @@ export class DiscordHandler {
             console.log(err);
             return err;
         }
+    }
+
+    public static async searchMessages(searchPhrase: string, channelId: string) {
+        const allMessages = await this.getAllMessages(channelId);
+
+        if(searchPhrase.length < 2) throw new Error("Searched phrase must have at least 3 digits.");
+
+        const searchedPhraseArray = allMessages.filter(message => (message.content).toLowerCase().includes(searchPhrase.toLowerCase()));
+
+        return searchedPhraseArray;
+    }
+
+    private static async fetchMessages(channelId: string, params: IMessageParams) {
+        
+        const channelMessages = await axios.get(`${this.baseUrl}/channels/${channelId}/messages`, {
+            params: params,
+            headers: {
+                "Authorization": `Bot ${botToken}`
+            }
+        });
+            return channelMessages.data;
+    }
+
+    private static async getAllMessages(channelId: string) {
+        let messagesArray: any[] = [];
+        let counter: number = 1;
+        do { 
+            
+            const messagesFlattenedArray = messagesArray.flat();
+            const messagesArrayLastElement = messagesFlattenedArray[messagesFlattenedArray.length - 1];
+
+            const paramsWithoutBefore: IMessageParams = {
+                "limit": 100
+            }
+
+            if(counter === 1) {
+                const channelMessages = await this.fetchMessages(channelId, paramsWithoutBefore);
+                if(channelMessages.length === 0) throw new Error("No messages.");
+                messagesArray.push(channelMessages);
+                
+            } else {
+                const paramsWithBefore: IMessageParams = {
+                    "before": messagesArrayLastElement.id,
+                    "limit": 100
+                }
+
+                const channelMessages = await this.fetchMessages(channelId, paramsWithBefore);
+                messagesArray.push(channelMessages);    
+            }
+
+            counter++;
+
+        } while((messagesArray.flat().length % 100) === 0);
+
+        return messagesArray.flat();
     }
 
     private static isDefined(arr: string[]) {

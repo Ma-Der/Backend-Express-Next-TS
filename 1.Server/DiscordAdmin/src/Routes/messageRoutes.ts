@@ -13,6 +13,7 @@ class MessageRoutes {
     createRoutes() {
         this.router.get("/:guildId/:channelId/messages", isAuthorized, DiscordController.getChannelMessages);
         this.router.delete("/:guildId/channels/:channelId/:messageId", isAuthorized, DiscordController.deleteMessage);
+        this.router.get("/:guildId/:channelId/searchMessage", isAuthorized, DiscordController.getSearchedMessages);
     }
 }
 

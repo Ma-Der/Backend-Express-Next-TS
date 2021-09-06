@@ -202,4 +202,20 @@ export class DiscordController {
             return res.render("failure", {failure: err});
         }
     }
+
+    public static async getSearchedMessages(req: Request<{guildId: string, channelId: string}, {}, {}, {searchMessage: string}>, res: Response) {
+        try {
+            const { guildId, channelId } = req.params;
+            const { searchMessage } = req.query;
+            console.log(searchMessage)
+
+            const searchedMessages = await DiscordHandler.searchMessages(searchMessage, channelId);
+            console.log(searchedMessages.length)
+
+            return res.render("show-messages", {messages: searchedMessages, guildId: guildId, channelId: channelId });
+        }
+        catch(err) {
+            return res.render("failure", {failure: err});
+        }
+    }
 }

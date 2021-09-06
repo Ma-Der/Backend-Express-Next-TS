@@ -9,10 +9,10 @@
 </head>
 <body>
     <div class="container row">
-        <div class="col-2">
+        <div class="col-1">
             <a href="/dashboard" class="go-back">Go Back</a>
         </div>
-        <div id="channel-list" class="col-5">
+        <div id="channel-list" class="col-7">
             <a href="/dashboard/<%= guildId %>/channels/create" method="get" class="create-btn btn">Create Channel</a>
             <ul class="list-of-channels">
                 <% channels.forEach((channel) => { if(channel.type === 0) {%>
@@ -29,12 +29,17 @@
                                 <input type="number" min=0 name="limit" value=0>
                                 <button type="submit" class="btn">Show messages</button>
                             </form>
+                            <form action="/dashboard/<%= guildId %>/<%= channel.id %>/searchMessage" method="GET">
+                                <label for="searchMessage">Search </label>
+                                <input type="text" name="searchMessage">
+                                <button type="submit" class="btn">Search</button>
+                            </form>
                         </div>
                     </li>
                 <% }}) %>
             </ul>
         </div>
-        <div id="roles-list" class="col-5">
+        <div id="roles-list" class="col-4">
             <a href="/dashboard/<%=guildId%>/roles/create" class="create-btn btn">Create Role</a>
             <ul class="list-of-channels">
                 <% roles.forEach((role) => { %>
