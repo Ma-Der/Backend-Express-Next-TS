@@ -19,10 +19,6 @@ class Routes {
         this.router.get("/invite", isAuthorized, DiscordController.inviteBot);
         this.router.get("/logout", UserController.logout);
 
-        this.router.get("/dashboard/guild/:guildId/channels", isAuthorized, DiscordController.getGuildChannels);
-        
-        this.router.get("/dashboard/guild/:guildId/roles", isAuthorized, DiscordController.getGuildRoles);
-
         this.router.get("/dashboard/:guildId/guild-menu", DiscordController.getGuild);
         this.router.get("/failure", (req, res) => res.render("failure"));
         

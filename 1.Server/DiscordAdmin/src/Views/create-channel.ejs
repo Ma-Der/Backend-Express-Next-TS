@@ -14,15 +14,18 @@
     <form action="/dashboard/<%= guildId %>/channels" method="POST" class="form">
         <label for="name">Name </label>
         <input type="text" name="name" id="name" required>
+        
         <input type="hidden" name="type" id="channel-type" value=0>
+        
         <label for="topic">Topic </label>
         <input type="text" id="topic" name="topic">
+        
         <label for="rate-limit-per-user">Rate Limit Per User</label>
         <input type="number" id="rate-limit-per-user" name="rate_limit_per_user">
+        
         <label for="position">Position</label>
         <input type="number" id="position" name="position">
-        <label for="parent-id">Parent Id</label>
-        <input type="text" id="parent-id" name="parent_id">
+
         <button type="submit">Create Channel</button>
     </form>
 </body>

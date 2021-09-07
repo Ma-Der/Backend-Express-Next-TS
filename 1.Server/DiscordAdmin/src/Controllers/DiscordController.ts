@@ -38,8 +38,9 @@ export class DiscordController {
     public static async getCreateChannel(req: Request<{guildId: string}>, res: Response) {
         try {
             const { guildId } = req.params;
+            const guildChannels = await DiscordHandler.getGuildChannels(guildId);
 
-            return res.render("create-channel", { guildId: guildId });
+            return res.render("create-channel", { guildId: guildId, guildChannels: guildChannels });
         }
         catch(err) {
             return res.render("failure", { failure: err });
@@ -64,8 +65,9 @@ export class DiscordController {
             const { guildId, channelId } = req.params;
 
             const channel = await DiscordHandler.getModifyChannel(channelId, guildId);
+            const guildChannels = await DiscordHandler.getGuildChannels(guildId);
 
-            return res.render("modify-channel", {channel: channel, guildId: guildId});
+            return res.render("modify-channel", {channel: channel, guildId: guildId, guildChannels: guildChannels});
         }
         catch(err) {
             return res.render("failure", {failure: err});

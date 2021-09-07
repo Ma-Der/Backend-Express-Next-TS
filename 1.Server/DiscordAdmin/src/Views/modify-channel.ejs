@@ -21,7 +21,7 @@
             <label for="permission_overwrites">Permission Overwrites</label>
             <input type="text" id="channel-permission-overwrites" name="permission_overwrites" value="<%=channel.permission_overwrites%>" disabled>
             <label for="nsfw">NSFW</label>
-            <input type="text" id="channel-nsfw" name="nsfw" value="<%=channel.nfsw%>" disabled>
+            <input type="text" id="channel-nsfw" name="nsfw" value="<%=channel.nsfw%>" disabled>
             <label for="rate_limit_per_user">Rate Limit Per User</label>
             <input type="text" id="channel-rate-limit" name="rate_limit_per_user" value="<%=channel.rate_limit_per_user%>" disabled>
         </form>
@@ -29,20 +29,27 @@
     <div>
         <form action="/dashboard/<%= guildId %>/channel/<%= channel.id %>?_method=PATCH" method="post" class="modification-form">
             <input type="hidden" name="_method" value="PATCH">
+            
             <label for="name">Name</label>
             <input type="text" id="channel-name" name="name" value="<%=channel.name%>">
+            
             <label for="position">Position</label>
             <input type="number" id="channel-position" name="position" value="<%=channel.position%>">
+            
             <label for="parent_id">Parent ID</label>
             <input type="text" id="channel-parent-id" name="parent_id" value="<%=channel.parent_id%>" disabled>
+            
             <label for="topic">Topic</label>
             <input type="text" id="channel-topic" name="topic" value="<%=channel.topic%>">
+            
             <label for="permission_overwrites">Permission Overwrites</label>
             <input type="text" id="channel-permission-overwrites" name="permission_overwrites" value="<%=channel.permission_overwrites%>" disabled>
+            
             <label for="nsfw">NSFW</label>
-            <input type="text" id="channel-nsfw" name="nsfw" value="<%=channel.nfsw%>">
+            <input type="text" id="channel-nsfw" name="nsfw" value="<%=channel.nsfw%>">
             <label for="rate_limit_per_user">Rate Limit Per User</label>
             <input type="number" id="channel-rate-limit" name="rate_limit_per_user" value="<%=channel.rate_limit_per_user%>">
+            
             <button type="submit">Modify</button>
         </form>
     </div>

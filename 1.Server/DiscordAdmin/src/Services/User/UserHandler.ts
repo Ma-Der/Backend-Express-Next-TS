@@ -10,14 +10,9 @@ export class UserHandler {
     }
 
     public static async getUserGuild(userId: string, guildId: string) {
-        try {
             const userGuilds = await this.getUserGuilds(userId);
             const guild = userGuilds.find((item) => item.id === guildId);
 
             return guild;
-        }
-        catch(err) {
-            return err;
-        }
     }
 }

@@ -1,52 +1,11 @@
 import axios from 'axios';
 import { botToken } from '../../Config/envVariables';
-
-interface IUserGuilds {
-    id: string;
-    permissions: number;
-}
-
-interface IBotGuilds {
-    id: string;
-}
-
-export interface IChannel {
-    name: string;
-    type?: number;
-    topic?: string;
-    rate_limit_per_user?: number;
-    position?: number;
-    parent_id?: string;
-    permission_overwrites?: Array<unknown>;
-    last_message_id?: number;
-    guild_id?: string;
-    nfsw?: boolean;
-}
-
-interface IRole {
-    id: string;
-    name: string;
-    permissions: string;
-    color: number;
-    hoist: boolean;
-    mentionable: boolean;
-}
-
-interface IMessageParams {
-    limit: number;
-    before?: string;
-}
-
-interface IMessage {
-    id: string;
-    content: string;
-}
+import { IUserGuilds, IBotGuilds, IChannel, IRole, IMessageParams } from '../../Types/types';
 
 export class DiscordHandler {
     public static baseUrl = 'https://discord.com/api';
 
     public static async getBotGuilds() {
-        try {
             const botGuilds = await axios.get(`${this.baseUrl}/users/@me/guilds`, {
                 headers: {
                     'Authorization': `Bot ${botToken}`
@@ -54,10 +13,6 @@ export class DiscordHandler {
             });
     
             return botGuilds.data;
-        }
-        catch(err) {
-            return err;
-        }
     }
 
     public static async getCommonGuilds(userGuilds: IUserGuilds[], botGuilds: IBotGuilds[]) {
@@ -67,7 +22,6 @@ export class DiscordHandler {
     }
 
     public static async getGuildChannels(guildId: string) {
-        try {
             const channels = await axios.get(`${this.baseUrl}/guilds/${guildId}/channels`, {
                 headers: {
                     'Authorization': `Bot ${botToken}`
@@ -75,14 +29,9 @@ export class DiscordHandler {
             });
 
             return channels.data;
-        }
-        catch(err) {
-            return err;
-        }
     }
 
     public static async createChannel(guildId: string, channel: IChannel) {
-        try {
 
             const arrayOfKeys = await Object.keys(channel);
             const arrayOfValues = await Object.values(channel);
@@ -97,12 +46,7 @@ export class DiscordHandler {
                     'Authorization': `Bot ${botToken}`
                 }
             });
-            console.log(newChannel)
             return newChannel.data;
-        }
-        catch(err) {
-            return err;
-        }
     }
 
     public static async getModifyChannel(channelId: string, guildId: string) {
@@ -114,16 +58,12 @@ export class DiscordHandler {
     }
 
     public static async modifyChannel(channelId: string, channel: IChannel) {
-        try {
-
             const arrayOfKeys = await Object.keys(channel);
             const arrayOfValues = await Object.values(channel);
             const arrayOfDefinedValues = await this.isDefined(arrayOfValues);
 
             const channelObject = await this.combineArraysIntoObject(arrayOfKeys, arrayOfDefinedValues);
             const definedChannelObject = await JSON.parse(JSON.stringify(channelObject));
-
-            console.log(definedChannelObject)
 
             const updatedChannel = await axios.patch(`${this.baseUrl}/channels/${channelId}`, definedChannelObject, {
                 headers: {
@@ -133,14 +73,9 @@ export class DiscordHandler {
             });
 
             return updatedChannel.data;
-        }
-        catch(err) {
-            return err;
-        }
     }
 
     public static async deleteChannel(channelId: string) {
-        try {
             const deletedChannel = await axios.delete(`${this.baseUrl}/channels/${channelId}`, {
                 headers: {
                     'X-Audit-Log-Reason': 'delete channel',
@@ -149,30 +84,19 @@ export class DiscordHandler {
             });
 
             return deletedChannel.data;
-        }
-        catch(err) {
-            return err;
-        }
     }
 
     public static async getGuildRoles(guildId: string) {
-        try {
             const roles = await axios.get(`${this.baseUrl}/guilds/${guildId}/roles`, {
                 headers: {
                     'Authorization': `Bot ${botToken}`
                 }
             });
             return roles.data;
-        }
-        catch(err) {
-            return err;
-        }
     }
 
     public static async createRole(guildId: string, role: IRole) {
-        try {
             if(!(role.color >= 0 && role.color <= 16777216)) throw new Error("Number is not integer or it's out of range.");
-
 
             const createdRole = await axios.post(`${this.baseUrl}/guilds/${guildId}/roles`, role, {
                 headers: {
@@ -180,13 +104,7 @@ export class DiscordHandler {
                     'Authorization': `Bot ${botToken}`
                 }
             });
-             console.log(createdRole)
             return createdRole.data;
-        }
-        catch(err) {
-            console.log(err)
-            return err;
-        }
     }
 
     public static async getModifyRole(guildId: string, roleId: string) {
@@ -197,7 +115,6 @@ export class DiscordHandler {
     }
 
     public static async modifyRole(guildId: string, roleId: string, role: IRole) {
-        try {
             const { name, permissions, color, hoist, mentionable } = role;
             if(!(color >= 0 && color <= 16777216)) throw new Error("Number is out of range.");
                     
@@ -209,17 +126,9 @@ export class DiscordHandler {
             });
             console.log(modifiedRole);
             return modifiedRole.data;
-        }
-        catch(err) {
-            console.log(err)
-            return err;
-        }
-        
-
     }
 
     public static async deleteRole(guildId: string, roleId: string) {
-        try {
             const deletedRole = await axios.delete(`${this.baseUrl}/guilds/${guildId}/roles/${roleId}`, {
                 headers: {
                     'X-Audit-Log-Reason': 'delete role',
@@ -227,11 +136,6 @@ export class DiscordHandler {
                 }
             });
             return deletedRole.data;
-        }
-        catch(err) {
-            console.log(err);
-            return err;
-        }
     }
 
     public static async getChannelMessages(channelId: string, limit: string) {
@@ -248,71 +152,55 @@ export class DiscordHandler {
             if(limitNumber > 100) {
                 let channelMessagesArray = [];
 
+
+                const paramsWithoutBefore: IMessageParams = {
+                    "limit": 100
+                }
+
                 for(let i=1; i <= counter; i++) {
                     if(i === 1) {
-                        const channelMessages = await axios.get(`${this.baseUrl}/channels/${channelId}/messages`, {
-                            params: {
-                                limit: 100
-                            },
-                            headers: {
-                                "Authorization": `Bot ${botToken}`
-                            }
-                        });
+                        const channelMessages = await this.fetchMessages(channelId, paramsWithoutBefore);
                         
-                        if((channelMessages.data).length === 0) return [];
+                        if((channelMessages).length === 0) return [];
 
-                        channelMessagesArray.push(channelMessages.data);
+                        channelMessagesArray.push(channelMessages);
 
                     } else if(i === counter && counterModulo !== 0) {
                         const channelMsgArrFlat = channelMessagesArray.flat();
                         let channelMsgArrayLastElement = channelMsgArrFlat[channelMsgArrFlat.length-1];
 
-                        const channelMessages = await axios.get(`${this.baseUrl}/channels/${channelId}/messages`, {
-                            params: {
-                                before: channelMsgArrayLastElement.id,
-                                limit: counterModulo
-                            },
-                            headers: {
-                                "Authorization": `Bot ${botToken}`
-                            }
-                        });
+                        const paramsWithBefore: IMessageParams = {
+                            "before": channelMsgArrayLastElement.id,
+                            "limit": counterModulo
+                        }
+
+                        const channelMessages = await this.fetchMessages(channelId, paramsWithBefore);
     
-                        channelMessagesArray.push(channelMessages.data);
+                        channelMessagesArray.push(channelMessages);
 
                     } else {
                         const channelMsgArrFlat = channelMessagesArray.flat();
                         let channelMsgArrayLastElement = channelMsgArrFlat[channelMsgArrFlat.length-1];
 
-                        const channelMessages = await axios.get(`${this.baseUrl}/channels/${channelId}/messages`, {
-                            params: {
-                                before: channelMsgArrayLastElement.id,
-                                limit: 100
-                            },
-                            headers: {
-                                "Authorization": `Bot ${botToken}`
-                            }
-                        });
+                        const paramsWithBefore: IMessageParams = {
+                            "before": channelMsgArrayLastElement.id,
+                            "limit": 100
+                        }
+
+                        const channelMessages = await this.fetchMessages(channelId, paramsWithBefore);
     
-                        channelMessagesArray.push(channelMessages.data);
+                        channelMessagesArray.push(channelMessages);
                     }
                 }
                 return channelMessagesArray.flat();
             }
 
-            const channelMessages = await axios.get(`${this.baseUrl}/channels/${channelId}/messages`, {
-                params: {
-                    limit: limitNumber
-                },
-                headers: {
-                    "Authorization": `Bot ${botToken}`
-                }
-            });
-            console.log(channelMessages.data);
-            return channelMessages.data;
+            const channelMessages = await this.fetchMessages(channelId, {"limit": limitNumber});
+
+            return channelMessages;
     }
 
     public static async deleteMessage(channelId: string, messageId: string) {
-        try {
             const deletedMessage = await axios.delete(`${this.baseUrl}/channels/${channelId}/messages/${messageId}`, {
                 headers: {
                     'X-Audit-Log-Reason': 'message deleted',
@@ -320,11 +208,6 @@ export class DiscordHandler {
                 }
             });
             return deletedMessage.data;
-        }
-        catch(err) {
-            console.log(err);
-            return err;
-        }
     }
 
     public static async searchMessages(searchPhrase: string, channelId: string) {
