@@ -5,12 +5,12 @@ export type TUrl = 'http://localhost:3000/getFirstImage' | 'http://localhost:300
 export class AttackHandler {
     public static attackOnFirstEndpoint(url: string) {
         return axios.get(url)
-            .then(res => res.status)
+            .then(res => res.statusText)
             .catch(err => console.log(err.message));
     }
     public static attackOnSecondEndpoint(url: string) {
         return axios.get(url)
-            .then(res => res.status)
+            .then(res => res.statusText)
             .catch(err => console.log(err.message));
     }
 
@@ -28,23 +28,20 @@ export class AttackHandler {
             }
         } else throw Error('Wrong URL.');
 
-
-
         const allAttacksResults = await Promise.allSettled(attacks);
         console.log(allAttacksResults);
 
-        const amountOfBlockedAttacks = AttackHandler.checkNumberOfBlockedRequests(allAttacksResults);
+        const amountOfBlockedAttacks = AttackHandler.numberOfBlockedRequests(allAttacksResults);
 
         return amountOfBlockedAttacks;
     }
 
-        // attacks typ ??
-    private static checkNumberOfBlockedRequests(attacks: any[]) {
+    private static numberOfBlockedRequests(attacks: any[]) {
         let numberOfBlockedAttacks = 0;
 
         for(let i=0; i < attacks.length; i++) {
             if(attacks[i]['status'] === 'fulfilled') {
-                if(attacks[i]['value'] !== 200) numberOfBlockedAttacks++;
+                if(attacks[i]['value'] !== 'OK') numberOfBlockedAttacks++;
             }
         }
 

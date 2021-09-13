@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { AttackHandler, TUrl } from '../Handlers/AttackHandler';
 
 export class AttackController {
-    public static async attack(req: Request<{}, {}, {url: TUrl, attackType: unknown, attackAmount: number}>, res: Response) {
+    public static async attack(req: Request<{}, {}, {url: TUrl, attackAmount: number}>, res: Response) {
         try {
             const { url, attackAmount } = req.body;
 
