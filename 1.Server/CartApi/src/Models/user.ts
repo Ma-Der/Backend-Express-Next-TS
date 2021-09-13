@@ -1,5 +1,8 @@
+import { ICart } from 'src/Types/cartTypes';
 import { v4 as uuidv4 } from 'uuid';
 import { UserValue, IUserData, IUser } from '../Types/userTypes';
+import { Cart } from '../Models/cart';
+import { carts } from '../Models/db/database';
 
 export class User implements IUser {
     id: string;
@@ -7,6 +10,7 @@ export class User implements IUser {
     surname: string;
     email: string;
     password: string;
+    cart: ICart;
 
     constructor(name: string, surname: string, email: string, password: string) {
         this.id = uuidv4();
@@ -14,6 +18,8 @@ export class User implements IUser {
         this.surname = surname;
         this.email = email;
         this.password = password;
+        this.cart = new Cart(this.id);
+        this.addCartToDB(this.cart);
     }
 
     updateUser(valueToUpdate: UserValue, newValue: string): IUserData {
@@ -43,7 +49,17 @@ export class User implements IUser {
             name: this.name,
             surname: this.surname,
             email: this.email,
-            password: this.password
+            password: this.password,
+            cart: this.cart
         }
+    }
+
+    addCartToDB(cart: ICart): ICart {
+        const cartInDB = carts.find(cartDB => cartDB.id === cart.id);
+        if(cartInDB) throw new Error('Cart already exists.');
+
+        carts.push(cart);
+
+        return cart;
     }
 }

@@ -1,5 +1,5 @@
 import { ICartItem, ICartItemData } from './cartItemTypes';
-import { IDiscountCode } from './discountsTypes';
+import { IDiscountCodeData } from './discountsTypes';
 import { IProduct } from './productTypes';
 
 export interface ICartData {
@@ -11,7 +11,7 @@ export interface ICartData {
 export interface ICart {
     id: string;
     cartItems: ICartItem[];
-    discountCode: IDiscountCode;
+    discountCode: IDiscountCodeData;
     addProduct(product: IProduct, amountOfProduct: number): ICartData;
     checkCart(): ICartData;
     clearCart(): ICartData;
@@ -19,5 +19,5 @@ export interface ICart {
     deleteProduct(productId: string): ICartItem[];
     modifyAmountOfProductInCart(productId: string, amount: number): ICartData;
     calculateCart(): number;
-    addDiscountCode(discounCode: IDiscountCode): ICartData;
+    addDiscountCode(discounCode: IDiscountCodeData): ICartData;
 }

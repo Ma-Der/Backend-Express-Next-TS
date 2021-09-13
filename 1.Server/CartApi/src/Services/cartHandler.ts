@@ -5,13 +5,13 @@ import { ICartData, ICart } from '../Types/cartTypes';
 
 export class CartHandler {
 
-    public static addToCart(cartId: string, product: IProduct, amount: number): ICartData {
+    public static addToCart(cartId: string, productId: string, amount: number): ICartData {
         const correctCart = this.findCart(cartId) as ICart;
 
         if(!correctCart) this.throwError('Such cart does not exists.');
-        if(!this.isProductExist(product.id)) throw new Error('Product does not exists.')
+        if(!this.isProductExist(productId)) throw new Error('Product does not exists.')
         
-        const item = products.find(item => item.id === product.id) as IProduct;
+        const item = products.find(item => item.id === productId) as IProduct;
         correctCart.addProduct(item, amount);
 
         return correctCart.getCartData();
@@ -52,14 +52,15 @@ export class CartHandler {
         return cart.getCartData();
     }
 
-    public static addDiscountToCart(cartId: string, discountCode: IDiscountCode): ICartData {
+    public static addDiscountToCart(cartId: string, discountCodeKey: string): ICartData {
+        
         const cart = this.findCart(cartId) as ICart;
         if(!cart) this.throwError('Cart does not exist.');
 
-        const searchedDiscount = discounts.find(({key}) => key === discountCode.key) as IDiscountCode;
+        const searchedDiscount = discounts.find(({key}) => key === discountCodeKey) as IDiscountCode;
         if(!searchedDiscount) this.throwError("Entered discount does not exists in database.");
 
-        cart.addDiscountCode(discountCode);
+        cart.addDiscountCode(searchedDiscount);
         
         return cart.getCartData();
     }

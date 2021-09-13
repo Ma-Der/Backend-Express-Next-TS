@@ -13,10 +13,10 @@ class CartRoutes {
     createRoutes() {
         this.router.post("/:cartId", CartController.addProductToCart);
         this.router.get("/:cartId", CartController.checkCart);
-        this.router.delete("/:cartId&:productId", CartController.deleteProductFromCart);
-        this.router.put("/:cartId&productId", CartController.changeProductAmount);
+        this.router.delete("/:cartId/:productId", CartController.deleteProductFromCart);
+        this.router.put("/:cartId/:productId", CartController.changeProductAmount);
         this.router.post("/buy/:cartId", CartController.buyCart);
-        this.router.put("/discount/:cartId", CartController.addDiscountToCart);
+        this.router.patch("/discount/:cartId", CartController.addDiscountToCart);
     }
 
 }

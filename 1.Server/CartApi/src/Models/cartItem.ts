@@ -9,14 +9,15 @@ export class CartItem implements ICartItem{
     amountOfProduct: number;
 
     constructor(product: IProduct, amountOfProduct: number) {
-        this.id = uuidv4();
+        this.id = product.id;
         this.product = product;
         this.amountOfProduct = amountOfProduct;
     }
 
-    changeAmountOfProduct(newAmount: number): void {
+    changeAmountOfProduct(newAmount: number): number {
         Validation.isPositiveNumber(newAmount);
         this.amountOfProduct = newAmount;
+        return this.amountOfProduct;
     }
 
     getCartItemData(): ICartItemData {

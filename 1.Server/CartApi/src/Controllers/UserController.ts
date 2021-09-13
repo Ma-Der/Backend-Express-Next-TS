@@ -41,4 +41,15 @@ export class UserController {
             return res.status(400).json(err.message);
         }
     }
+
+    public static getAllUsers(req: Request, res: Response) {
+        try {
+            const allUsers = UserHandler.showUsers();
+
+            return res.status(200).json(allUsers);
+        }   
+        catch(err) {
+            return res.status(400).json(err.message);
+        }
+    }
 }

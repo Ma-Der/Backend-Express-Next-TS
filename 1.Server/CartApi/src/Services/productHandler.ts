@@ -1,9 +1,10 @@
 import { Product } from '../Models/product';
-import { products } from '../Models/db/database';
+import { products, discounts } from '../Models/db/database';
 import { IProduct } from '../Types/productTypes';
 import { Validation } from '../Validation/Validation';
 
 export class ProductHandler {
+
     public static createProduct(productName: string, productPrice: number) {
         if(productName.length < 3) throw new Error('Product name should be at least 3 characters.');
         if(!Validation.isPositiveNumber(productPrice)) throw new Error("Product price should be greater than zero.");
@@ -39,11 +40,15 @@ export class ProductHandler {
         return this.getAllProducts();
     }
 
-    public static addDiscountToProduct(productId: string, discountValue: number) {
+    public static addDiscountToProduct(productId: string, discountKey: string) {
         if(!this.isProductExists(productId)) throw new Error("This product does not exists in database.");
 
         const searchedProduct = products.find(({id}) => id === productId) as IProduct;
-        searchedProduct.addDiscount(discountValue);
+
+        const discount = discounts.find(discount => discount.key === discountKey);
+        if(!discount) throw new Error("Discount does not exist in database.");
+
+        searchedProduct.addDiscount(discount.value);
         
         return searchedProduct.getProductData();
         

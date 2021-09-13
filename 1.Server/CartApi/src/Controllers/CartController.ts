@@ -1,15 +1,20 @@
 import { Request, Response } from 'express';
-import { IProduct } from '../Types/productTypes';
 import { CartHandler } from '../Services/cartHandler';
-import { IDiscountCode } from '../Types/discountsTypes';
 
 export class CartController {
 
-    public static addProductToCart(req: Request<{ cartId: string }, {}, { product: IProduct, amountOfProduct: number }>, res: Response) {
+    public static addProductToCart(req: Request<{ cartId: string }, {}, { productId: string, amountOfProduct: number }>, res: Response) {
         try {
             const { cartId } = req.params;
-            const { product, amountOfProduct } = req.body
-            const result = CartHandler.addToCart(cartId, product, amountOfProduct);
+            const { productId, amountOfProduct } = req.body;
+
+            if(typeof amountOfProduct === 'string') {
+                const amount = parseFloat(amountOfProduct);
+                const result = CartHandler.addToCart(cartId, productId, amount);    
+                return res.status(200).json(result);
+            }
+            
+            const result = CartHandler.addToCart(cartId, productId, amountOfProduct);
             return res.status(200).json(result);
         }
         catch (err) {
@@ -63,11 +68,11 @@ export class CartController {
         }
     }
 
-    public static addDiscountToCart(req: Request<{ cartId: string }, {}, {discountCode: IDiscountCode}>, res: Response) {
+    public static addDiscountToCart(req: Request<{ cartId: string }, {}, {discountCodeKey: string}>, res: Response) {
         try {
             const { cartId } = req.params;
-            const { discountCode } = req.body;
-            const cartWithDiscount = CartHandler.addDiscountToCart(cartId, discountCode);
+            const { discountCodeKey } = req.body;
+            const cartWithDiscount = CartHandler.addDiscountToCart(cartId, discountCodeKey);
 
             return res.status(200).json(cartWithDiscount);
         }

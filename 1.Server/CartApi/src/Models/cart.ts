@@ -2,14 +2,14 @@ import { ICart, ICartData } from '../Types/cartTypes';
 import { ICartItem } from '../Types/cartItemTypes';
 import { CartItem } from '../Models/cartItem';
 import { IProduct } from '../Types/productTypes';
-import { IDiscountCode } from '../Types/discountsTypes';
+import { IDiscountCodeData } from '../Types/discountsTypes';
 
 export class Cart implements ICart {
     id: string;
     cartItems: ICartItem[];
-    discountCode: IDiscountCode;
+    discountCode: IDiscountCodeData;
 
-    constructor(id: string, discountCode: IDiscountCode = {key: 'noDiscount', value: 0}) {
+    constructor(id: string, discountCode: IDiscountCodeData = {key: 'noDiscount', value: 0}) {
         this.id = id;
         this.cartItems = [];
         this.discountCode = discountCode;    
@@ -59,7 +59,7 @@ export class Cart implements ICart {
         return this.getCartData();
     }
 
-    addDiscountCode(discountCode: IDiscountCode) {
+    addDiscountCode(discountCode: IDiscountCodeData) {
         this.discountCode = discountCode;
         return this.getCartData();
     }

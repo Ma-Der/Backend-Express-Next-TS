@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
-import { IDiscountCodeData } from '../Types/discountsTypes';
 import { ProductHandler } from '../Services/productHandler';
 
 export class ProductController {
 
-    public static createProduct(req: Request<{}, {}, {productName: string, productPrice: number}>, res: Response) {
+    public static createProduct(req: Request<{}, {}, { name: string, price: number }>, res: Response) {
         try {
-            const { productName, productPrice } = req.body;
-            const product = ProductHandler.createProduct(productName, productPrice);
+            const { name, price } = req.body;
+
+            const product = ProductHandler.createProduct(name, price);
             return res.status(200).json(product);
         }
         catch(err) {
@@ -15,7 +15,7 @@ export class ProductController {
         }
     }
 
-    public static changeProductName(req: Request<{id: string}, {}, {newProductName: string}>, res: Response) {
+    public static changeProductName(req: Request<{ id: string }, {}, {newProductName: string}>, res: Response) {
         try {
             const { id } = req.params;
             const { newProductName } = req.body;
@@ -60,12 +60,12 @@ export class ProductController {
         }
     }
 
-    public static addDiscountToProduct(req: Request<{id: string}, {}, IDiscountCodeData>, res: Response) {
+    public static addDiscountToProduct(req: Request< {id: string }, {}, { key: string }>, res: Response) {
         try {
             const { id } = req.params;
-            const { value } = req.body;
+            const { key } = req.body;
     
-            const productWithDiscount = ProductHandler.addDiscountToProduct(id, value);
+            const productWithDiscount = ProductHandler.addDiscountToProduct(id, key);
             return res.status(200).json(productWithDiscount);
         }
         catch(err) {

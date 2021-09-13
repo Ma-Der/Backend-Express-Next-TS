@@ -1,5 +1,3 @@
-import { IDiscountCodeData } from "./discountsTypes";
-
 export interface IProduct {
     id: string;
     productName: string;
@@ -19,4 +17,9 @@ export interface IProductData {
     oldProductPrice: number;
     productPrice: number;
     discount: number;
+}
+
+export interface IProductToAdd {
+    name: string;
+    price: number;
 }

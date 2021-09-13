@@ -1,4 +1,4 @@
-import { ICartData } from "./cartTypes";
+import { ICart, ICartData } from "./cartTypes";
 
 export type UserValue = 'name' | 'surname' | 'email' | 'password';
 
@@ -8,6 +8,7 @@ export interface IUserData {
     surname: string;
     email: string;
     password: string;
+    cart: ICart;
 }
 
 export interface IUser {

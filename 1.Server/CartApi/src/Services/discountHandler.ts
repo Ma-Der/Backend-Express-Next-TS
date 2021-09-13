@@ -1,6 +1,6 @@
 import { Discount } from '../Models/discount';
 import { discounts } from '../Models/db/database';
-import { IDiscountCode } from '../Types/discountsTypes';
+import { IDiscountCodeData, IDiscountCode } from '../Types/discountsTypes';
 
 export class DiscountHandler {
     public static createDiscount(name: string, value: number) {
@@ -14,7 +14,8 @@ export class DiscountHandler {
     }
 
     public static deleteDiscount(name: string) {
-        discounts.filter(({key}) => key !== name);
+        if(!this.findDiscount(name)) throw new Error('Discount does not exist in database.');
+       return discounts.filter(({key}) => key !== name);
     }
 
     public static modifyDiscount(name: string, newValue: number): IDiscountCode {
@@ -30,12 +31,12 @@ export class DiscountHandler {
         };
     }
 
-    public static findDiscount(phrase: string) {
+    private static findDiscount(phrase: string) {
         return discounts.find(({key}) => key === phrase);
     }
 
-    public static showDiscounts(): IDiscountCode[] {
-        const newDiscounts = discounts.map(discount => discount);
+    public static showDiscounts(): IDiscountCodeData[] {
+        const newDiscounts = discounts.map(discount => discount.showDiscount());
         return newDiscounts;
     }
 }

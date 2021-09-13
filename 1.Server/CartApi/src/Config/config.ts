@@ -9,11 +9,15 @@ dotenv.config();
 
 export const initializeServer = (): Express => {
     const app = express();
+
     app.use(express.json());
+    app.use(express.urlencoded({extended: true}));
+
     app.use("/cart", cartRoutes.router);
-    app.use("/product", productRoutes.router);
+    
     app.use("/discount", discountRoutes.router);
     app.use("/user", userRoutes.router);
+    app.use("/product", productRoutes.router);
 
     startServer(app);
     return app;
