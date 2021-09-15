@@ -3,9 +3,6 @@ import passportFacebook from 'passport-facebook';
 import passportGithub from 'passport-github2';
 import { UserOAuth, UserLocal } from '../db/UserModel';
 
-
-// verifycallback w facebook, local i github brak, co wtedy z typowaniem ?
-
 export const passportGoogleHandler = async (accessToken: string, refreshToken: string, profile: passportGoogle.Profile, done: passportGoogle.VerifyCallback) => {
     try {
         const user = await new UserOAuth({
@@ -36,7 +33,7 @@ export const passportFacebookHandler = async (accessToken: string, refreshToken:
             email: profile.emails
         });
     
-        const searchedUser = await UserOAuth.findOne({id: profile.id}).exec();
+        const searchedUser = await UserOAuth.findOne({id: profile.id});
     
         if(searchedUser) {
            return done(null, searchedUser);
@@ -74,8 +71,7 @@ export const passportGithubHandler = async (accessToken: string, refreshToken: s
 
 export const passportLocalHandler = async (email: string, password: string, done: any) => {
     try {
-        const user = await UserLocal.findOne({email: email}).exec();
-
+        const user = await UserLocal.findOne({email: email});
         if(!user) {
             return done(null, false);
         } 

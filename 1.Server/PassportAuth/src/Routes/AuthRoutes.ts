@@ -19,7 +19,7 @@ class AuthRoutes {
         }));
         this.router.get("/auth/google/callback", passport.authenticate('google', { successRedirect: "/logged", failureRedirect: "/failure"}));
 
-        this.router.get("/auth/facebook", passport.authenticate('facebook', { scope: ["displayName"] }));
+        this.router.get("/auth/facebook", passport.authenticate('facebook', { scope: ['public_profile'] }));
         this.router.get("/auth/facebook/callback", passport.authenticate('facebook', { successRedirect: "/logged", failureRedirect: "/failure"}));
 
         this.router.get("/auth/github", passport.authenticate('github', {

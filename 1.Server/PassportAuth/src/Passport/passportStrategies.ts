@@ -7,7 +7,6 @@ import { passportGoogleHandler, passportFacebookHandler, passportGithubHandler, 
 import dotenv from 'dotenv';
 
 dotenv.config();
-
 export const googleStrategy = new GoogleStrategy(
     {
         clientID: process.env.CLIENT_ID_GOOGLE,
@@ -19,9 +18,9 @@ export const googleStrategy = new GoogleStrategy(
 
 export const facebookStrategy = new FacebookStrategy(
     {
-        clientID: process.env.CLIENT_ID_FB,
-        clientSecret: process.env.CLIENT_SECRET_FB,
-        callbackURL: process.env.CALLBACK_URL_FB
+        clientID: process.env.CLIENT_ID_FB as string,
+        clientSecret: process.env.CLIENT_SECRET_FB as string,
+        callbackURL: process.env.CALLBACK_URL_FB as string
     },
         passportFacebookHandler
     );

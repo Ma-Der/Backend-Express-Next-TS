@@ -10,7 +10,7 @@ export interface IUserAuth {
 const userOAuthSchema = new Schema({
     id: {type: String, required: true },
     username: {type: String, required: true},
-    email: {type: String, required: true}
+    email: {type: String}
 });
 
 const userLocalSchema = new Schema({
