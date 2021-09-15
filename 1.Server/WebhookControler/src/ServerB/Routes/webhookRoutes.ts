@@ -10,7 +10,7 @@ class WebhookRoutes {
     }
 
     createRoutes() {
-        this.router.post("/sendData", WebhookControler.log);
+        this.router.post("/sendData/:id?", WebhookControler.log);
     }
 }
 

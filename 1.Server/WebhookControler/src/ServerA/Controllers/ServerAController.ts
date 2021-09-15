@@ -1,13 +1,14 @@
 import { Request, Response } from 'express';
 import { ServerAHandler } from '../Services/ServerAHandlers';
-
+import { loggedIn, loggedOut, users, usersThatBoughtProduct } from '../../pseudoDB/pseudoDB';
 
 export class ServerAController {
 
-    public static addUser(req: Request, res: Response) {
+    public static async addUser(req: Request<{}, {}, { name: string }>, res: Response) {
         try {
-            const { name } = req.params;
-            const addedUser = ServerAHandler.addUser(name);
+            const { name } = req.body;
+            const addedUser = await ServerAHandler.addUser(name);
+            console.log("Users: " + JSON.stringify(users));
 
             return res.status(200).json(addedUser);
         }   
@@ -16,11 +17,11 @@ export class ServerAController {
         }
     }
 
-    public static userLoggedIn(req: Request, res: Response) {
+    public static userLoggedIn(req: Request<{ id: string }>, res: Response) {
         try {
             const { id } = req.params;
             const userLoggedIn = ServerAHandler.userLoggedIn(id);
-    
+            console.log(`LoggedIn: ${JSON.stringify(loggedIn)}`);
             return res.status(200).json(userLoggedIn);
         }
         catch(err) {
@@ -28,11 +29,12 @@ export class ServerAController {
         }
     }
 
-    public static userLoggedOut(req: Request, res: Response) {
+    public static userLoggedOut(req: Request< { id: string }>, res: Response) {
         try {
             const { id } = req.params;
             const userLoggedOut = ServerAHandler.userLoggedOut(id);
-
+            console.log("LoggedIn: " + JSON.stringify(loggedIn));
+            console.log("LoggedOut: " + JSON.stringify(loggedOut));
             return res.status(200).json(userLoggedOut);
         }
         catch(err) {    
@@ -40,11 +42,11 @@ export class ServerAController {
         }
     }
 
-    public static userBoughtProduct(req: Request, res: Response) {
+    public static userBoughtProduct(req: Request< {id: string }>, res: Response) {
         try {
-            const { id } = req.body;
+            const { id } = req.params;
             const userThatBought = ServerAHandler.userBoughtProduct(id);
-
+            console.log("UserThatBought: " + JSON.stringify(usersThatBoughtProduct));
             return res.status(200).json(userThatBought);
         }
         catch(err) {    
@@ -52,9 +54,9 @@ export class ServerAController {
         }
     }
 
-    public static deleteUserLoggedIn(req: Request, res: Response) {
+    public static deleteUserLoggedIn(req: Request<{ id: string }>, res: Response) {
         try {
-            const { id } = req.body;
+            const { id } = req.params;
             const userToDelete = ServerAHandler.deleteUserLoggedIn(id);
             return res.status(200).json(userToDelete);
         }
@@ -63,10 +65,17 @@ export class ServerAController {
         }
     }
 
-    public static updateUserProductAmount(req: Request, res: Response) {
+    public static updateUserProductAmount(req: Request<{ id: string }, {}, { data: number }>, res: Response) {
         try {
-            const { id, productAmount } = req.body;
-            const userWithUpdatedProductAmount = ServerAHandler.updateUserProductAmount(id, productAmount);
+            const { id } = req.params;
+            const { data } = req.body;
+
+            if(typeof data === 'string') {
+                const userWithUpdatedProductAmount = ServerAHandler.updateUserProductAmount(id, parseInt(data));
+                console.log("UsersThatBoughtProduct: " + JSON.stringify(usersThatBoughtProduct));
+                return res.status(200).json(userWithUpdatedProductAmount);        
+            }
+            const userWithUpdatedProductAmount = ServerAHandler.updateUserProductAmount(id, data);
 
             return res.status(200).json(userWithUpdatedProductAmount);
         }

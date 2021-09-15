@@ -53,6 +53,8 @@ export class ServerAHandler {
         const userThatBought = users.find(({id}) => id === userId);
 
         if(!userThatBought) throw new Error("User does not exist in database.");
+        console.log(`In ServerAHandler: ${productAmount}`);
+    
 
         userThatBought.changeProductAmount(productAmount);
 

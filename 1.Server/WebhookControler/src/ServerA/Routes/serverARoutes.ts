@@ -11,11 +11,11 @@ class ServerARoutes {
 
     createRoutes() {
         this.router.post("/addUser", ServerAController.addUser);
-        this.router.post("/userLoggedIn", ServerAController.userLoggedIn);
-        this.router.post("/userLoggedOut", ServerAController.userLoggedOut);
-        this.router.post("/userBoughtProduct", ServerAController.userBoughtProduct);
-        this.router.delete("/userLoggedIn", ServerAController.deleteUserLoggedIn);
-        this.router.put("/userBoughtProduct", ServerAController.updateUserProductAmount);
+        this.router.post("/userLoggedIn/:id", ServerAController.userLoggedIn);
+        this.router.post("/userLoggedOut/:id", ServerAController.userLoggedOut);
+        this.router.post("/userBoughtProduct/:id", ServerAController.userBoughtProduct);
+        this.router.delete("/userLoggedIn/:id", ServerAController.deleteUserLoggedIn);
+        this.router.patch("/userBoughtProduct/:id", ServerAController.updateUserProductAmount);
     }
 
 }
