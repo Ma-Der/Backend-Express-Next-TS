@@ -14,6 +14,7 @@ class AuthRoutes {
         this.router.get("/login", (req, res) => { res.render('login') });
         this.router.get("/register", (req, res) => { res.render('register') });
         this.router.get("/logged", (req, res) => {res.render('logged')});
+        this.router.get("/logout", AuthController.logout);
         this.router.get("/auth/google", passport.authenticate('google', {
             scope: ['profile']
         }));
@@ -26,8 +27,9 @@ class AuthRoutes {
             scope: ['profile']
         }));
         this.router.get("/auth/github/callback", passport.authenticate('github', { successRedirect: "/logged", failureRedirect: "/failure"}));
-        this.router.post("/login", passport.authenticate('local', { successRedirect: "/logged", failureRedirect: "/failure"}, AuthController.localRedirect));
+        this.router.post("/login", passport.authenticate('local', { successRedirect: "/logged", failureRedirect: "/failure"}));
         this.router.post("/register", AuthController.registerUser);
+        this.router.get("/failure", AuthController.failure);
     }
 }
 

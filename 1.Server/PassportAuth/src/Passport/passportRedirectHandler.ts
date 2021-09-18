@@ -10,7 +10,7 @@ export const passportGoogleHandler = async (accessToken: string, refreshToken: s
             username: profile.displayName,
             email: profile._json.email
         });
-        const searchedUser = await UserOAuth.findOne({id: profile.id}).exec();
+        const searchedUser = await UserOAuth.findOne({id: profile.id});
     
          if(searchedUser) {
             return done(null, searchedUser);
@@ -55,7 +55,8 @@ export const passportGithubHandler = async (accessToken: string, refreshToken: s
             email: profile.emails
         });
     
-        const searchedUser = await UserOAuth.findOne({id: profile.id}).exec();
+        const searchedUser = await UserOAuth.findOne({id: profile.id});
+        console.log(searchedUser)
     
         if(searchedUser) {
            return done(null, searchedUser);

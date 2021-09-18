@@ -34,6 +34,7 @@ export const githubStrategy = new GitHubStrategy(
         passportGithubHandler
     );
 export const localStrategy = new LocalStrategy(
-    { email: "email"},
+    { usernameField: "email"
+    },
     passportLocalHandler
 );

@@ -3,17 +3,9 @@ import { UserLocal } from '../db/UserModel';
 
 
 export class AuthController {
-    public static localRedirect(req: Request, res: Response) {
-        try {
-            const { email, password } = req.body;
-            return res.redirect('logged');
-        }
-        catch(err) {
-            return res.send(err.message)
-        }
-    }
 
-    public static async registerUser(req: Request, res: Response) {
+    public static async registerUser(req: Request<{}, {}, { email: string, password: string }>, res: Response) {
+        
         const { email, password } = req.body;
 
         try {
@@ -35,5 +27,20 @@ export class AuthController {
         catch(err) {
             return res.status(500).json(err.message);
         }
+    }
+
+    public static async logout(req: Request, res: Response) {
+        try {
+            req.logout();
+
+            return res.redirect("/");
+        }
+        catch(err) {
+            return res.render("failure");
+        }
+    }
+
+    public static failure(req: Request, res: Response) {
+        return res.status(403).render("failure");
     }
 }

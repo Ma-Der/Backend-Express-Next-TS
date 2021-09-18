@@ -18,5 +18,5 @@ const userLocalSchema = new Schema({
     password: {type: String, required: true}
 })
 
-export const UserOAuth = mongoose.model("user", userOAuthSchema);
+export const UserOAuth = mongoose.model("users", userOAuthSchema);
 export const UserLocal = mongoose.model("userLocal", userLocalSchema);

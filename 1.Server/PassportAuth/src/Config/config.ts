@@ -4,6 +4,9 @@ import passport from 'passport';
 import { facebookStrategy, googleStrategy, githubStrategy, localStrategy } from '../Passport/passportStrategies';
 import authRoutes from '../Routes/AuthRoutes';
 import connectWithMongoDB from '../db/mongoConnect';
+import MongoStore from 'connect-mongo';
+import session from 'express-session';
+import { envVar } from './envVar';
 
 dotenv.config();
 
@@ -13,6 +16,19 @@ export const initializeServer = (): Express => {
     app.set('views', 'src/Views');
     app.use(express.json());
     app.use(express.urlencoded({ extended: false }));
+
+    app.use(session({
+        secret: 'Some secret',
+        store: MongoStore.create({
+            mongoUrl: envVar.connectMongoDB
+        }),
+        cookie: {
+            maxAge: 60000 * 60 * 24
+        },
+        saveUninitialized: false,
+        resave: false,
+        name: 'Passport Auth'
+    }));
 
     app.use(passport.initialize());
     app.use(passport.session());
