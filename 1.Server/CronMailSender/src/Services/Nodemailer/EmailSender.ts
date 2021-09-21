@@ -17,9 +17,10 @@ export class EmailSender {
                 pass: process.env.PASS
             }
         });
+        
         return transporter.sendMail({
             to: this.emailOptions.to,
-            html: `<a href="${this.emailOptions.text}">Click Me</a>`
+            html: `<a href="http://localhost:3000/${this.emailOptions.id}">Click Me</a>`
         });
     }
 }

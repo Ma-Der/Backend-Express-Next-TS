@@ -7,9 +7,8 @@ export class EmailController {
             const { emailNmr } = req.params;
 
             const result = await EmailHandler.stopSendEmail(emailNmr);
-            
 
-            return res.status(200).json(result);
+            return res.status(200).render("mailStopped");
         }
         catch(err) {
             return res.status(400).json(err.message);
@@ -29,18 +28,17 @@ export class EmailController {
         }
     }
 
-    public static async incrementCounter(req: Request<{emailNmr: string}>, res: Response) {
+    public static async getPage(req: Request<{ emailNmr: string }>, res: Response) {
         try {
             const { emailNmr } = req.params;
+            const incrementCounter = await EmailHandler.incrementCounter(emailNmr);
 
-            const result = await EmailHandler.incrementCounter(emailNmr);
-            return res.status(200).json(result);
+            return res.render("page", {mail: incrementCounter});
         }
         catch(err) {
-            return res.status(500).json(err.message);
+            return res.status(400).json(err.message);
         }
 
-
-
     }
+
 }

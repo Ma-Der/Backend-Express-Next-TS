@@ -6,8 +6,7 @@ export class EmailHandler {
         if(!emailToStop) throw new Error("No such email in database.");
         
         emailToStop.switchOff();
-        console.log(emailArray);
-        console.log(emailToStop)
+
         return emailToStop.showEmail();
     }
 
