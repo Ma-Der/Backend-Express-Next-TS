@@ -92,7 +92,6 @@ export class DiscordController {
 
             const deletedChannel = await DiscordHandler.deleteChannel(channelId);
 
-            console.log(deletedChannel);
             return res.redirect(`/dashboard/${guildId}/guild-menu`);
         }   
         catch(err) {
@@ -169,7 +168,6 @@ export class DiscordController {
             const { guildId, roleId } = req.params;
          
             const deletedRole = await DiscordHandler.deleteRole(guildId, roleId);
-            console.log(deletedRole);
          
             return res.redirect(`/dashboard/${guildId}/guild-menu`);
         }
@@ -209,10 +207,8 @@ export class DiscordController {
         try {
             const { guildId, channelId } = req.params;
             const { searchMessage } = req.query;
-            console.log(searchMessage)
 
             const searchedMessages = await DiscordHandler.searchMessages(searchMessage, channelId);
-            console.log(searchedMessages.length)
 
             return res.render("show-messages", {messages: searchedMessages, guildId: guildId, channelId: channelId });
         }

@@ -124,7 +124,6 @@ export class DiscordHandler {
                     'Authorization': `Bot ${botToken}`
                 }
             });
-            console.log(modifiedRole);
             return modifiedRole.data;
     }
 
