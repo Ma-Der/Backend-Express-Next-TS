@@ -2,3 +2,4 @@
 credentials.json
 credentialsAuth.json
 .env
+/tokens/

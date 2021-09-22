@@ -1,14 +1,10 @@
 import express, { Express } from 'express';
 import googleRoutes from '../Routes/routes';
-import dotenv from 'dotenv';
 import path from 'path';
-
-dotenv.config();
+import { port } from './envVariables';
 
 export const initializeServer = (): Express => {
     const app = express();
-
-    const port = process.env.PORT;
 
     app.set("view engine", "ejs");
     app.set("views", "src/views");
@@ -25,7 +21,7 @@ export const initializeServer = (): Express => {
 }
 
 const startServer = (server: Express) => {
-    server.listen(process.env.PORT, () => {
-        console.log(`Listening on port ${process.env.PORT}`)
+    server.listen(port, () => {
+        console.log(`Listening on port ${port}`)
     });
 }

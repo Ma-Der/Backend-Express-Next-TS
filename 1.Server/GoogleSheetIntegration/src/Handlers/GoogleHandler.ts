@@ -1,9 +1,10 @@
 import { google, Auth, drive_v3, sheets_v4 } from 'googleapis';
 import { GoogleAuth } from 'google-auth-library';
 import { v4 as uuidv4 } from 'uuid';
+import path from 'path';
 import * as fs from 'fs';
 import * as os from 'os';
-import { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, credentials, spreadsheetId } from '../Config/envVariables';
+import { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, credentials } from '../Config/envVariables';
 
 type Media = {
     mimeType: string;
@@ -11,8 +12,6 @@ type Media = {
 }
 
 export class GoogleHandler {
-
-
     public static async googleVariables() {
         const oAuth2Client = await GoogleHandler.getGoogleOAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
         const googleDrive = await GoogleHandler.getGoogleDrive(oAuth2Client);
@@ -28,6 +27,15 @@ export class GoogleHandler {
         }
     }
 
+    public static async getGoogleDriveWithCredentials(oAuth2Client: Auth.OAuth2Client) {
+
+        const token = fs.readFileSync(path.join(path.resolve(), 'src', 'tokens', 'tokens.tk'), 'utf8');
+        const parsedToken = JSON.parse(token);
+        oAuth2Client.setCredentials(parsedToken);
+        const googleDrive = await this.getGoogleDrive(oAuth2Client);
+
+        return googleDrive;        
+    }
 
     public static async getGoogleOAuth2Client(clientId: string, clientSecret: string, redirectURI: string) {
         const oAuth2 = await new google.auth.OAuth2(clientId, clientSecret, redirectURI);
@@ -41,14 +49,13 @@ export class GoogleHandler {
         });
     }
 
-    // Jakie typy na err i tokens ???
     public static async getOAuthCredentials(oAuth2Client: Auth.OAuth2Client, code: string) {
-        return await oAuth2Client.getToken(code, (err: any, tokens: any) => {
-
-            if(err) throw new Error('Error in authenticating.');
-            
-            oAuth2Client.setCredentials(tokens);
-        })
+        const token = await oAuth2Client.getToken(code);
+        oAuth2Client.setCredentials(token.tokens);
+        
+        fs.writeFileSync(path.join(path.resolve(), 'src', 'tokens', 'tokens.tk'), JSON.stringify(token.tokens));
+        
+        return oAuth2Client;
     }
 
     public static getSpreadsheetAuth(credentials: string): any {
@@ -73,7 +80,8 @@ export class GoogleHandler {
         }
     }
 
-    public static async uploadFileToGoogleDrive(drive: drive_v3.Drive, name: string, mimeType: string, media: Media) {
+    public static async uploadFileToGoogleDrive(drive: drive_v3.Drive, name: string, mimeType: string, media: Media) {     
+        
         const response = await drive.files.create({
             requestBody: {
                 name: name,
@@ -85,10 +93,9 @@ export class GoogleHandler {
         return response;
     }
 
-// file jaki typ ??
-    public static async createDrivePermissions(drive: drive_v3.Drive, file: any) {
+    public static async createDrivePermissions(drive: drive_v3.Drive, fileId: string) {
         return await drive.permissions.create({
-            fileId: file.data.id,
+            fileId: fileId,
             requestBody: {
                 role: "reader",
                 type: "anyone"
@@ -96,9 +103,9 @@ export class GoogleHandler {
         });
     }
 
-    public static async createGoogleDriveDownloadLink(drive: drive_v3.Drive, file: any) {
+    public static async createGoogleDriveDownloadLink(drive: drive_v3.Drive, fileId: string) {
         return await drive.files.get({
-            fileId: file.data.id,
+            fileId: fileId,
             fields: 'webContentLink'
         })
     }
