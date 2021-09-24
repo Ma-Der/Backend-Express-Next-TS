@@ -9,25 +9,19 @@ export class EmailHandler {
     public static async sendMail(emailId: string) {
 
         const emailToSend = await emailDB.find(({id}) => id === emailId);
-        console.log(emailToSend)
         if(!emailToSend) throw new Error("There is no such email in database.");
 
         const encryptedMessage = await this.cryptoService.encryptEmail(emailToSend.to, emailToSend.text);
         emailToSend.changeText(encryptedMessage);
-        console.log(encryptedMessage)
         const emailSender = new EmailSender(emailToSend);
         emailSender.sendEmail();
         return emailToSend;
 
     }
 
-    public static async decryptEmail(email: IEmailData) {
-        const decryptedMessage = await this.cryptoService.decryptEmail(email.to, email.text);
+    public static async decryptEmail(to: string, text: string) {
+        const decryptedMessage = await this.cryptoService.decryptEmail(to, text);
 
-        return {
-            id: email.id,
-            to: email.to,
-            text: decryptedMessage
-        }
+        return decryptedMessage
     }
 }

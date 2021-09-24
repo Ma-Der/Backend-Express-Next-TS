@@ -12,8 +12,9 @@ class EncryptRouter {
 
     createRoutes() {
         this.router.get("/", PageController.loadPage);
-        this.router.get('/send/:emailId', EmailController.sendEmail);
-        this.router.get('/decrypt', EmailController.decryptEmail);
+        this.router.get("/showEmails", EmailController.showEmails);
+        this.router.post('/send/:emailId', EmailController.sendEmail);
+        this.router.post('/decrypt', EmailController.decryptEmail);
     }
 }
 
