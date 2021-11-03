@@ -35,7 +35,9 @@ export class ProductHandler {
     public static deleteProduct(productId: string) {
         if(!this.isProductExists(productId)) throw new Error("Product does not exists.");
 
-        const arrOfProducts = products.filter(product => product.id !== productId);
+        const arrOfProducts = products.filter(({id}) => id !== productId);
+        products.splice(0, products.length);
+        products.push(...arrOfProducts);
 
         return this.getAllProducts();
     }

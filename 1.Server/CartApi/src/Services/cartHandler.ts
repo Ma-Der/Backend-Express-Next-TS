@@ -23,6 +23,7 @@ export class CartHandler {
         if(!cart) this.throwError('Such cart does not exists.');
         
         cart.deleteProduct(productId);
+        console.log(cart);
         
         return cart.getCartData();
     }

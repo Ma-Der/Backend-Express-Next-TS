@@ -15,7 +15,12 @@ export class DiscountHandler {
 
     public static deleteDiscount(name: string) {
         if(!this.findDiscount(name)) throw new Error('Discount does not exist in database.');
-       return discounts.filter(({key}) => key !== name);
+
+        const arrOfDiscounts = discounts.filter(({key}) => key !== name);
+        discounts.splice(0, discounts.length);
+        discounts.push(...arrOfDiscounts);
+
+       return this.showDiscounts();
     }
 
     public static modifyDiscount(name: string, newValue: number): IDiscountCode {

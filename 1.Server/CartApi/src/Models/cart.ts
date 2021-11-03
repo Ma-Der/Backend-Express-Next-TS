@@ -32,7 +32,9 @@ export class Cart implements ICart {
     deleteProduct(productId: string): ICartItem[] {
 
         const newCartList = this.cartItems.filter(product => product.id !== productId)
-        return newCartList;
+        this.cartItems.splice(0, this.cartItems.length);
+        this.cartItems.push(...newCartList);
+        return this.cartItems;
     }
 
     modifyAmountOfProductInCart(productId: string, amount: number): ICartData {

@@ -16,7 +16,10 @@ export class UserHandler {
 
     public static deleteUser(userId: string) {
         if(!(this.isUserExists(userId))) throw new Error('User does not exist in database.');
-        return users.filter(({id}) => id !== userId);
+        const currentUsersDB = users.filter(({id}) => id !== userId);
+        users.splice(0, users.length);
+        users.push(...currentUsersDB);
+        return currentUsersDB;
     }
 
     public static updateUser(userId: string, valueToUpdate: UserValue, newValue: string): IUserData { 
