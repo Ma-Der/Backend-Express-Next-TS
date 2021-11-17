@@ -9,6 +9,7 @@ class CatRoutes {
     }
 
     createRoutes() {
+        this.router.get("/", CatController.showAllCats);
         this.router.get("/showCat/:catId", CatController.showCat);
         this.router.post("/createCat", CatController.createCat);
         this.router.delete("/adoptKitten/:catId", CatController.deleteCat);

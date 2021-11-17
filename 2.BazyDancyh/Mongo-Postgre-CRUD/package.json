@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"bash run_dev_server.sh\" \"nodemon\""
+    "start": "nodemon src/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -19,9 +19,12 @@
     "knex": "^0.95.11",
     "nodemon": "^2.0.12",
     "pg": "^8.7.1",
+    "ts-node": "^10.4.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "mongoose": "^6.0.7"
+    "@types/node": "^16.11.7",
+    "mongoose": "^6.0.7",
+    "typescript": "^4.4.4"
   }
 }

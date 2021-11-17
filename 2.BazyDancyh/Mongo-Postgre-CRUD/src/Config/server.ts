@@ -1,6 +1,6 @@
 import express, { Express } from 'express';
 import { port } from './envVar';
-import { connectWithMongoDB } from '../Database/Mongo/mongoConnection';
+import { connectWithMongoDB } from '../db/Mongo/mongoConnection';
 import catRoutes from '../Routes/routes';
 
 export const initializeServer = (): Express => {
