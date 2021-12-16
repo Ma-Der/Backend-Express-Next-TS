@@ -58,4 +58,14 @@ export default class UserHandler {
         
         return result;
     }
+    
+    public static async findAllUsersThatLikeGivenItem(item: string) {
+        if(!item) throw new Error("Item is undefined");
+        if(typeof item !== "string") throw new Error("Item is not a string.");
+        if(item.length === 0) throw new Error("Item is empty string");
+        
+        const result = await this.mongoClient.findAllUsersThatLikeGivenItem(item);
+        
+        return result;
+    }
 }
