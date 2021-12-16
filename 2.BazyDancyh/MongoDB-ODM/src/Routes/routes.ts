@@ -15,6 +15,7 @@ class MongoRoutes {
         this.router.patch("/:_id", UserController.findByIdAndUpdate);
         this.router.post("/searchBefore", UserController.findAllUsersBornBeforeGivenDate);
         this.router.post("/searchAfter", UserController.findAllUsersBornAfterGivenDate);
+        this.router.post("/searchByItem", UserController.findAllUsersThatLikeGivenItem);
     }
 }
 
