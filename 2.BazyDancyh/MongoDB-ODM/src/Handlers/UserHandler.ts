@@ -38,4 +38,13 @@ export default class UserHandler {
 
         return result;
     }
+    
+    public static async findAllUsersBornBeforeDate(date: string) {
+        if(!date) console.log("No date");
+        
+        const dateInMiliseconds = (new Date(date)).getTime();
+        const result = await this.mongoClient.findAllUsersBornBeforeDate(dateInMiliseconds);
+        
+        return result;
+    }
 }
