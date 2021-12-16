@@ -105,4 +105,21 @@ export class UserController {
             return res.status(400).json(err);
         }
     }
+    
+    public static async findAllUsersWithGivenIdInFriends(req: Request<{id: string}>, res: Response) {
+        try {
+            const { id } = req.params;
+            
+            if(!id) throw new Error("Id is undefined");
+            if(id.length = 0) throw new Error("Id is empty string");
+            if(id.length < 10) throw new Error("Id is not a valid id in database.");
+            
+            const result = UserHandler.findAllUsersWithGivenIdInFriends(id);
+            
+            return res.status(200).json(result);
+        }
+        catch(err) {
+            return res.status(400).json(err);
+        }
+    }
 }
