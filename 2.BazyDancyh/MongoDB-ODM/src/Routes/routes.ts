@@ -13,6 +13,8 @@ class MongoRoutes {
         this.router.post("/:_id", UserController.findById);
         this.router.delete("/:_id", UserController.findByIdAndDelete);
         this.router.patch("/:_id", UserController.findByIdAndUpdate);
+        this.router.post("/searchBefore", UserController.findAllUsersBornBeforeGivenDate);
+        this.router.post("/searchAfter", UserController.findAllUsersBornAfterGivenDate);
     }
 }
 
