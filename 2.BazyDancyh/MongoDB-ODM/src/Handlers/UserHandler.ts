@@ -39,12 +39,12 @@ export default class UserHandler {
         return result;
     }
     
-    public static async findAllUsersBornBeforeDate(date: string) {
+    public static async findAllUsersBornBeforeGivenDate(date: string) {
         if(!date) throw new Error("Date variable is probably undefined");
         if(!(date instanceof Date && !isNaN(date))) throw new Error("Date string is not a valid dateString.");
         
         const dateInMiliseconds = (new Date(date)).getTime();
-        const result = await this.mongoClient.findAllUsersBornBeforeDate(dateInMiliseconds);
+        const result = await this.mongoClient.findAllUsersBornBeforeGivenDate(dateInMiliseconds);
         
         return result;
     }
