@@ -70,4 +70,15 @@ export class MongooseMethods {
 
         return result;
     }
+    
+    public async findAllUsersBornAfterGivenDate(dateInMiliseconds: number) {
+        const client = await this.mongoClient.connect();
+        const db = client.db();
+
+        const result = await db.collection("users").find({ dateOfBirth: $gt: dateInMiliseconds});
+
+        client.close();
+
+        return result;
+    }
 }
