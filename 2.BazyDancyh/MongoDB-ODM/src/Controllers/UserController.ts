@@ -87,4 +87,22 @@ export class UserController {
             return res.status(400).json(err);
         }
     }
+    
+    public static async findAllUsersThatLikeGivenItem(req: Request<{}, {}, {}, {item: string}>) {
+        try {
+            const { item } = req.query;
+            
+            if(!item) throw new Error("Item is undefined");
+            if(typeof item !== "string") throw new Error("Item is not a string.");
+            if(item.length === 0) throw new Error("Item is empty string");
+            if(item.length < 3) return res.status(400).json({message: "Searched item is less than 3 characters."})
+            
+            const result = await UserHandler.findAllUsersThatLikeGivenItem(item);
+            
+            return res.status(200).json(result);
+        }
+        catch(err) {
+            return res.status(400).json(err);
+        }
+    }
 }
