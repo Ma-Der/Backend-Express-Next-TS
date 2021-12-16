@@ -1,14 +1,10 @@
 import { MongoClient, ObjectId } from 'mongodb';
 
-type TUserId = {
-    id: ObjectId;
-}
-
 export interface IUser {
     name: String;
     dateOfBirth: String;
     thingsItLikes: Array<String>;
-    friends: TUserId[];
+    friends: string[];
 }
 
 export class MongooseMethods {
@@ -90,6 +86,15 @@ export class MongooseMethods {
         const db = client.db();
         
         const result = await db.collection("users").find({thingsItLikes: [{$eq: item}]});
+        
+        return result;
+    }
+    
+    public async findAllUsersWithGivenIdInFriends(idOfFriend: string) {
+        const client = await this.mongoClient.connect();
+        const db = client.db();
+        
+        const result = await db.collection("users").find({friends: idOfFriend});
         
         return result;
     }
