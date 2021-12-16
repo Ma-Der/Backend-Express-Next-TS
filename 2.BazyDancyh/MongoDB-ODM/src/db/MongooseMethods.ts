@@ -59,4 +59,15 @@ export class MongooseMethods {
 
         return result;
     }
+    
+    public async findAllUsersBornBeforeGivenDate(dateInMiliseconds: number) {
+        const client = await this.mongoClient.connect();
+        const db = client.db();
+
+        const result = await db.collection("users").find({ dateOfBirth: $lt: dateInMiliseconds});
+
+        client.close();
+
+        return result;
+    }
 }
