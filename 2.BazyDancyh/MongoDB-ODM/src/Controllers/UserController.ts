@@ -62,7 +62,7 @@ export class UserController {
         try {
             const { date } = req.body;
             const actualDate = new Date(date);
-            if((Object.prototype.toString().call(actualDate) !== "[object Date]") && !isNaN((new Date(date))) throw new Error("Date string is not a valid dateString.");
+            if((Object.prototype.toString.call(actualDate) !== "[object Date]") && !isNaN((new Date(date))) throw new Error("Date string is not a valid dateString.");
             
             const result = UserHandler.findAllUsersBornBeforeDate(date);
             
