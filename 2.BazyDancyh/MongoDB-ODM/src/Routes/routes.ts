@@ -16,6 +16,7 @@ class MongoRoutes {
         this.router.post("/searchBefore", UserController.findAllUsersBornBeforeGivenDate);
         this.router.post("/searchAfter", UserController.findAllUsersBornAfterGivenDate);
         this.router.post("/searchByItem", UserController.findAllUsersThatLikeGivenItem);
+        this.router.get("/:id", UserController.findAllUsersWithGivenIdInFriends);
     }
 }
 
