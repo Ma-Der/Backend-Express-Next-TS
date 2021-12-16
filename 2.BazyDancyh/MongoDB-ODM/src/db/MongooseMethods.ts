@@ -22,7 +22,9 @@ export class MongooseMethods {
         const client = await this.mongoClient.connect();
         const db = client.db();
 
-        const result = await db.collection("users").insertOne(user);
+        const insertResult = await db.collection("users").insertOne(user);
+        const { insertedId } = insertResult;
+        
         client.close();
 
         return result;
