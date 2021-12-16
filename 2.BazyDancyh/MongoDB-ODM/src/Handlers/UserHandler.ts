@@ -62,9 +62,19 @@ export default class UserHandler {
     public static async findAllUsersThatLikeGivenItem(item: string) {
         if(!item) throw new Error("Item is undefined");
         if(typeof item !== "string") throw new Error("Item is not a string.");
-        if(item.length === 0) throw new Error("Item is empty string");
+        if(item.length = 0) throw new Error("Item is empty string");
         
         const result = await this.mongoClient.findAllUsersThatLikeGivenItem(item);
+        
+        return result;
+    }
+    
+    public static async findAllUsersWithGivenIdInFriends(idOfFriend: string) {
+        if(!idOfFriend) throw new Error("Id is undefined");
+        if(idOfFriend.length = 0) throw new Error("Id is empty string");
+        if(idOfFriend.length < 10) throw new Error("Id is not a valid id in database.");
+        
+        const result = await this.mongoClient.findAllUsersWithGivenIdInFriends(idOfFriend);
         
         return result;
     }
