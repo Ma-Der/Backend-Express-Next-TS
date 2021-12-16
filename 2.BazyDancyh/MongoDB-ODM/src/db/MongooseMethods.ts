@@ -81,4 +81,13 @@ export class MongooseMethods {
 
         return result;
     }
+    
+    public async findAllUsersThatLikeGivenItem(item: string) {
+        const client = await this.mongoClient.connect();
+        const db = client.db();
+        
+        const result = await db.collection("users").find({thingsItLikes: [{$eq: item}]});
+        
+        return result;
+    }
 }
