@@ -24,6 +24,7 @@ export class MongooseMethods {
 
         const insertResult = await db.collection("users").insertOne(user);
         const { insertedId } = insertResult;
+        const result = await db.collection("users").findOne({_id: insertedId});
         
         client.close();
 
