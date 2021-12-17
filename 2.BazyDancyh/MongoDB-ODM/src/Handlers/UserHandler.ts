@@ -8,7 +8,7 @@ export default class UserHandler {
     
     public static async create(user: IUser) {
         if(!user) console.log('No user');
-        
+        console.log(user)
         const result = await this.mongoClient.create(user);
 
         return result;
@@ -41,9 +41,11 @@ export default class UserHandler {
     
     public static async findAllUsersBornBeforeGivenDate(date: string) {
         if(!date) throw new Error("Date variable is probably undefined");
-        if(!(date instanceof Date && !isNaN(date))) throw new Error("Date string is not a valid dateString.");
+        const actualDate = new Date(date);
+        if(!(actualDate instanceof Date && !isNaN(actualDate.getTime()))) throw new Error("Date string is not a valid dateString.");
         
-        const dateInMiliseconds = (new Date(date)).getTime();
+        const dateInMiliseconds = actualDate.getTime();
+        
         const result = await this.mongoClient.findAllUsersBornBeforeGivenDate(dateInMiliseconds);
         
         return result;
@@ -51,9 +53,10 @@ export default class UserHandler {
     
     public static async findAllUsersBornAfterGivenDate(date: string) {
         if(!date) throw new Error("Date variable is probably undefined");
-        if(!(date instanceof Date && !isNaN(date))) throw new Error("Date string is not a valid dateString.");
+        const actualDate = new Date(date);
+        if(!(actualDate instanceof Date && !isNaN(actualDate.getTime()))) throw new Error("Date string is not a valid dateString.");
         
-        const dateInMiliseconds = (new Date(date)).getTime();
+        const dateInMiliseconds = actualDate.getTime();
         const result = await this.mongoClient.findAllUsersBornAfterGivenDate(dateInMiliseconds);
         
         return result;
@@ -62,7 +65,7 @@ export default class UserHandler {
     public static async findAllUsersThatLikeGivenItem(item: string) {
         if(!item) throw new Error("Item is undefined");
         if(typeof item !== "string") throw new Error("Item is not a string.");
-        if(item.length = 0) throw new Error("Item is empty string");
+        if(item.length === 0) throw new Error("Item is empty string");
         
         const result = await this.mongoClient.findAllUsersThatLikeGivenItem(item);
         
@@ -71,7 +74,7 @@ export default class UserHandler {
     
     public static async findAllUsersWithGivenIdInFriends(idOfFriend: string) {
         if(!idOfFriend) throw new Error("Id is undefined");
-        if(idOfFriend.length = 0) throw new Error("Id is empty string");
+        if(idOfFriend.length === 0) throw new Error("Id is empty string");
         if(idOfFriend.length < 10) throw new Error("Id is not a valid id in database.");
         
         const result = await this.mongoClient.findAllUsersWithGivenIdInFriends(idOfFriend);

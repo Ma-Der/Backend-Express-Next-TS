@@ -8,7 +8,7 @@ export class UserController {
     public static async create(req: Request<{}, {}, {user: IUser}>, res: Response) {
         try {
             const { user } = req.body;
-
+            console.log(user)
             const result = await UserHandler.create(user);
 
             return res.status(201).json(result);
@@ -21,7 +21,7 @@ export class UserController {
     public static async findById(req: Request<{_id: string}>, res: Response) {
         try {
             const { _id } = req.params;
-
+            console.log('hello ID')
             const result = await UserHandler.findById(_id);
 
             return res.status(200).json(result);
@@ -60,13 +60,15 @@ export class UserController {
     
     public static async findAllUsersBornBeforeGivenDate(req: Request<{}, {}, {date: string}>, res: Response) {
         try {
+            
             const { date } = req.body;
             const actualDate = new Date(date);
-            if((Object.prototype.toString.call(actualDate) !== "[object Date]") && !isNaN((new Date(date))) throw new Error("Date string is not a valid dateString.");
             
-            const result = UserHandler.findAllUsersBornBeforeGivenDate(date);
+            if((Object.prototype.toString.call(actualDate) !== "[object Date]") && !isNaN(actualDate.getTime())) throw new Error("Date string is not a valid dateString.");
             
-            return res.status(200).json();
+            const result = await UserHandler.findAllUsersBornBeforeGivenDate(date);
+            
+            return res.status(200).json(result);
         }
         catch(err) {
             return res.status(400).json(err);
@@ -77,18 +79,19 @@ export class UserController {
         try {
             const { date } = req.body;
             const actualDate = new Date(date);
-            if((Object.prototype.toString.call(actualDate) !== "[object Date]") && !isNaN((new Date(date))) throw new Error("Date string is not a valid dateString.");
+
+            if((Object.prototype.toString.call(actualDate) !== "[object Date]") && !isNaN(actualDate.getTime())) throw new Error("Date string is not a valid dateString.");
             
-            const result = UserHandler.findAllUsersBornAfterGivenDate(date);
+            const result = await UserHandler.findAllUsersBornAfterGivenDate(date);
             
-            return res.status(200).json();
+            return res.status(200).json(result);
         }
         catch(err) {
             return res.status(400).json(err);
         }
     }
     
-    public static async findAllUsersThatLikeGivenItem(req: Request<{}, {}, {}, {item: string}>) {
+    public static async findAllUsersThatLikeGivenItem(req: Request<{}, {}, {}, {item: string}>, res: Response) {
         try {
             const { item } = req.query;
             
@@ -111,10 +114,10 @@ export class UserController {
             const { id } = req.params;
             
             if(!id) throw new Error("Id is undefined");
-            if(id.length = 0) throw new Error("Id is empty string");
+            if(id.length === 0) throw new Error("Id is empty string");
             if(id.length < 10) throw new Error("Id is not a valid id in database.");
             
-            const result = UserHandler.findAllUsersWithGivenIdInFriends(id);
+            const result = await UserHandler.findAllUsersWithGivenIdInFriends(id);
             
             return res.status(200).json(result);
         }

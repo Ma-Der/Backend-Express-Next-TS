@@ -1,10 +1,11 @@
 import { MongoClient, ObjectId } from 'mongodb';
+import { UserModel } from '../Models/user';
 
 export interface IUser {
-    name: String;
-    dateOfBirth: String;
-    thingsItLikes: Array<String>;
-    friends: string[];
+    name: string;
+    dateOfBirth: string;
+    thingsItLikes: Array<string>;
+    friends: Array<string>;
 }
 
 export class MongooseMethods {
@@ -18,7 +19,8 @@ export class MongooseMethods {
         const client = await this.mongoClient.connect();
         const db = client.db();
 
-        const insertResult = await db.collection("users").insertOne(user);
+        const newUser = new UserModel(user.name, user.dateOfBirth, user.thingsItLikes, user.friends);
+        const insertResult = await db.collection("users").insertOne(newUser);
         const { insertedId } = insertResult;
         const result = await db.collection("users").findOne({_id: insertedId});
         
@@ -63,7 +65,7 @@ export class MongooseMethods {
         const client = await this.mongoClient.connect();
         const db = client.db();
 
-        const result = await db.collection("users").find({ dateOfBirth: $lt: dateInMiliseconds});
+        const result = await db.collection('users').find({ dateOfBirth: {$lt: dateInMiliseconds}}).toArray();
 
         client.close();
 
@@ -74,7 +76,7 @@ export class MongooseMethods {
         const client = await this.mongoClient.connect();
         const db = client.db();
 
-        const result = await db.collection("users").find({ dateOfBirth: $gt: dateInMiliseconds});
+        const result = await db.collection("users").find({ dateOfBirth: {$gt: dateInMiliseconds}}).toArray();
 
         client.close();
 
@@ -85,7 +87,7 @@ export class MongooseMethods {
         const client = await this.mongoClient.connect();
         const db = client.db();
         
-        const result = await db.collection("users").find({thingsItLikes: [{$eq: item}]});
+        const result = await db.collection("users").find({thingsItLikes: {$eq: item}}).toArray();
         
         return result;
     }
@@ -93,8 +95,9 @@ export class MongooseMethods {
     public async findAllUsersWithGivenIdInFriends(idOfFriend: string) {
         const client = await this.mongoClient.connect();
         const db = client.db();
-        
-        const result = await db.collection("users").find({friends: idOfFriend});
+        console.log(idOfFriend)
+        const result = await db.collection("users").find({friends: {$eq: idOfFriend}}).toArray();
+        console.log(result)
         
         return result;
     }

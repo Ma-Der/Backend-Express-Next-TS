@@ -11,12 +11,13 @@ class MongoRoutes {
     createRoutes() {
         this.router.post("/", UserController.create);
         this.router.post("/:_id", UserController.findById);
-        this.router.delete("/:_id", UserController.findByIdAndDelete);
-        this.router.patch("/:_id", UserController.findByIdAndUpdate);
         this.router.post("/searchBefore", UserController.findAllUsersBornBeforeGivenDate);
         this.router.post("/searchAfter", UserController.findAllUsersBornAfterGivenDate);
         this.router.post("/searchByItem", UserController.findAllUsersThatLikeGivenItem);
-        this.router.get("/:id", UserController.findAllUsersWithGivenIdInFriends);
+        this.router.delete("/:_id", UserController.findByIdAndDelete);
+        this.router.patch("/:_id", UserController.findByIdAndUpdate);
+
+        this.router.post("/:id", UserController.findAllUsersWithGivenIdInFriends);
     }
 }
 
