@@ -9,9 +9,9 @@ class ClassRouter {
     }
 
     createRoutes() {
-        this.router.get("/:name", ClassController.getClass);
-        this.router.delete("/:name", ClassController.deleteClass);
-        this.router.patch("/:name", ClassController.editClass);
+        this.router.get("/:id", ClassController.getClass);
+        this.router.delete("/:id", ClassController.deleteClass);
+        this.router.patch("/:id", ClassController.editClass);
         this.router.post("/", ClassController.createClass);
     }
 }

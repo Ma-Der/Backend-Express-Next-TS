@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { StudentModel } from '../Models/student';
-import { Class } from '../Models/class'; 
+import { ClassModel } from '../Models/class'; 
 import { SchoolModel } from '../Models/school';
 import Student from '../db/Mongo/Models/Student';
 import SchoolClass from '../db/Mongo/Models/Class';
@@ -30,7 +30,7 @@ export class Creation {
     public static async createClass() {
         const className = await this.getRandomClassName(this.classNames);
 
-        const newClass = new Class(className);
+        const newClass = new ClassModel(className);
         const newClassInDB = await SchoolClass.create(newClass);
 
         for(let i=0; i < 10;i++) {
@@ -55,6 +55,12 @@ export class Creation {
         }
 
         return newSchoolInDB;
+    }
+
+    public static async clearDB() {
+        await School.deleteMany({});
+        await SchoolClass.deleteMany({});
+        await Student.deleteMany({});
     }
 
     private static getRandomDate(start: Date, end: Date) {

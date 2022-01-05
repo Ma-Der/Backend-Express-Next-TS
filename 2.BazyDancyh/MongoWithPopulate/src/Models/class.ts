@@ -1,6 +1,6 @@
 import { IClass } from "../Types/types";
 
-export class Class implements IClass {
+export class ClassModel implements IClass {
     name: string;
     students: string[];
     constructor(name: string) {

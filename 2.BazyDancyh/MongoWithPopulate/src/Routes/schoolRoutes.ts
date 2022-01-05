@@ -9,9 +9,9 @@ class MenRouter {
     }
 
     createRoutes() {
-        this.router.get("/:name", SchoolController.getSchools);
-        this.router.delete("/:name", SchoolController.deleteSchool);
-        this.router.patch("/:name", SchoolController.editSchool);
+        this.router.get("/:id", SchoolController.getSchools);
+        this.router.delete("/:id", SchoolController.deleteSchool);
+        this.router.patch("/:id", SchoolController.editSchool);
         this.router.post("/", SchoolController.createSchool);
     }
 }

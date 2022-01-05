@@ -17,10 +17,7 @@ export const initializeServer = (): Express => {
 
     connectWithMongoDB();
 
-    Creation.createSchool()
-    .then(res => res.populate('classes'))
-    .then(response => console.log(response))
-    .catch(err => console.log(err));
+    Creation.clearDB();
 
     startServer(app);
     return app;
