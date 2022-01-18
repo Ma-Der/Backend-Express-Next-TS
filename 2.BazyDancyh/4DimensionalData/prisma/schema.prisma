@@ -22,7 +22,7 @@ model Shop {
   name         String           @unique
   address      String
   ratings      ShopValidation[]
-  avgRating    Float            @default(0)
+  avgRating    Float            @default(1)
   categories   Category[]
   store_chain  StoreChain       @relation(fields: [storeChainId], references: [id])
   storeChainId Int

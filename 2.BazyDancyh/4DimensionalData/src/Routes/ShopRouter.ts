@@ -11,9 +11,11 @@ class ShopRouter {
     createRoutes() {
         this.router.get("/", ShopController.getShops);
         this.router.get("/:id", ShopController.getShop);
-        this.router.post("/", ShopController.createShop);
+        //this.router.post("/", ShopController.createShop);
+        this.router.post("/rate/:id", ShopController.addRating);
         this.router.patch("/:id", ShopController.changeShopProperty);
         this.router.delete("/:id", ShopController.deleteShop);
+        
     }
 }
 

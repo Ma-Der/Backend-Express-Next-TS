@@ -59,4 +59,45 @@ export class ShopHandler {
         
         return deletedShop;
     }
+
+    public static async addRating(shopId: number, comment: string, rating: number) {
+        const newShopRating = await this.prisma.shopValidation.create({
+            data: {
+                comment,
+                rating,
+                shopId
+            }
+        });
+        
+        const averageRating: number = await this.getShopRatingAvarage(shopId) as number;
+        const updatedShop = await this.updateShopAvgRating(shopId, averageRating);
+
+        return newShopRating;
+    }
+
+    private static async getShopRatingAvarage(shopId: number) {
+        const shopRatingAggregate = await this.prisma.shopValidation.aggregate({
+            where: {
+                shopId: shopId
+            },
+            _avg: {
+                rating: true
+            }
+        });
+
+        return shopRatingAggregate._avg.rating;
+    }
+
+    private static async updateShopAvgRating(shopId: number, avgRating: number) {
+        const shop = await this.prisma.shop.update({
+            where: {
+                id: shopId
+            },
+            data: {
+                avgRating: avgRating
+            }
+        });
+
+        return shop;
+    }
 }
