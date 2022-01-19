@@ -4,11 +4,6 @@ export interface IProduct {
     oldProductPrice: number;
     productPrice: number;
     discount: number;
-    changeProductName(newName: string): void;
-    changeProductPrice(newPrice: number): void;
-    calculatePrice(): void;
-    addDiscount(discountValue: number): void;
-    getProductData(): IProductData;
 }
 
 export interface IProductData {

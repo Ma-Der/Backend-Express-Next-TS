@@ -1,44 +1,53 @@
 import { UserValue, IUserData, IUser } from '../Types/userTypes';
 import { User } from '../Models/user';
 import { users, carts } from '../Models/db/database';
-
+import { Cart } from '../Models/cart';
+import CartMongo from '../Models/db/MongoModels/Cart';
+import UserMongo from '../Models/db/MongoModels/User';
+import mongoose, { ObjectId } from 'mongoose';
 
 export class UserHandler {
-    public static addUser(name: string, surname: string, email: string, password: string): IUserData {
-        const newUser = new User(name, surname, email, password);
-        if(this.isUserExists(newUser.id)) throw new Error('User already exists in database.');
+    public static async addUser(name: string, surname: string, email: string, password: string) {
+        const cart = new Cart();
+        const userCart = await this.addCartToDB(cart);
 
-        users.push(newUser);
-        //carts.push(newUser.cart);
+        const newUser = new User(name, surname, email, password, userCart._id);
+        const newUserInDB = await UserMongo.create(newUser);
 
-        return newUser.getUserData()
+        return newUserInDB;
     }
 
-    public static deleteUser(userId: string) {
-        if(!(this.isUserExists(userId))) throw new Error('User does not exist in database.');
-        const currentUsersDB = users.filter(({id}) => id !== userId);
-        users.splice(0, users.length);
-        users.push(...currentUsersDB);
-        return currentUsersDB;
+    public static async deleteUser(userId: string) {        
+        const deletedUser = await UserMongo.findOneAndDelete({id: userId});
+        const cartId = new mongoose.Types.ObjectId(deletedUser[0].cart);
+        const deletedUserCart = await CartMongo.findByIdAndDelete(cartId);
+
+        if(!deletedUser) throw new Error('User does not exist in database.');
+
+        return deletedUser;
     }
 
-    public static updateUser(userId: string, valueToUpdate: UserValue, newValue: string): IUserData { 
-        const userToUpdate = users.find(({id}) => id === userId) as IUser;
+    public static async updateUser(userId: string, userProperty: UserValue, newPropertyValue: string) { 
+        const updatedUser = await UserMongo.findOneAndUpdate({id: userId}, {
+            [userProperty]: newPropertyValue
+        });
+        if(!updatedUser) throw new Error("User does not exist in database");
 
-        if(!userToUpdate) throw new Error('User does not exist in database.');
-
-        userToUpdate.updateUser(valueToUpdate, newValue);
-
-        return userToUpdate.getUserData();
+        return updatedUser;
     }
 
-    public static showUsers() {
-        return users.map(user => user.getUserData());
+    public static async showUsers() {
+        const users = await UserMongo.find({}).populate('cart');
+
+        if(!users) throw new Error('No users in database.');
+
+        return users;
     }
 
-    private static isUserExists(userId: string): boolean {
-        const checkUser = users.find(({id}) => id === userId);
-        if(checkUser) return true;
-        return false;
+    private static async addCartToDB(cart: Cart) {
+        const newCart = await CartMongo.create(cart);
+        if(!newCart) throw new Error('Something went wrong with creating cart.');
+
+        return newCart;
     }
 }

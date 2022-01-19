@@ -5,7 +5,7 @@ import { IProduct } from './productTypes';
 export interface ICartData {
     id: string;
     cartItems: ICartItemData[];
-    cartDiscount: number;
+    discountCode: IDiscountCodeData;
 }
 
 export interface ICart {

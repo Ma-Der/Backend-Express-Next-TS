@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { ICart, ICartData } from '../Types/cartTypes';
 import { ICartItem } from '../Types/cartItemTypes';
 import { CartItem } from '../Models/cartItem';
@@ -9,8 +10,8 @@ export class Cart implements ICart {
     cartItems: ICartItem[];
     discountCode: IDiscountCodeData;
 
-    constructor(id: string, discountCode: IDiscountCodeData = {discountCode: 'noDiscount', discountValue: 0}) {
-        this.id = id;
+    constructor(discountCode: IDiscountCodeData = {discountCode: 'noDiscount', discountValue: 0}) {
+        this.id = uuidv4();
         this.cartItems = [];
         this.discountCode = discountCode;    
     }
@@ -71,7 +72,7 @@ export class Cart implements ICart {
         return { 
             id: this.id,
             cartItems: cartData,
-            cartDiscount: this.discountCode.discountValue
+            discountCode: this.discountCode
          };
     }
 

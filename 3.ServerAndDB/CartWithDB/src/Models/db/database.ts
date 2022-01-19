@@ -12,7 +12,7 @@ export const products: IProduct[] = [];
 export const discounts: IDiscountCode[] = [];
 export const carts: ICart[] = [];
 
-const user1 = new User('Mark', 'Smoth', 'email@email.com', 'sword');
+//const user1 = new User('Mark', 'Smoth', 'email@email.com', 'sword');
 
 const product1 = new Product('Hammer', 10);
 const product2 = new Product('Nails', 0.2);
@@ -24,7 +24,7 @@ const discount1 = new Discount('low', 0.05);
 const discount2 = new Discount('mid', 0.1);
 const discount3 = new Discount('high', 0.2);
 
-users.push(user1);
+//users.push(user1);
 products.push(product1, product2, product3, product4, product5);
 discounts.push(discount1, discount2, discount3);
     

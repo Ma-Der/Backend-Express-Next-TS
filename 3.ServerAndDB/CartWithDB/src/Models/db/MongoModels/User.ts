@@ -8,7 +8,7 @@ const UserSchema = new Schema({
     surname: {type: String, required: true},
     email: {type: String, required: true},
     password: {type: String, required: true},
-    cart: String
+    cart: {type: mongoose.Types.ObjectId, ref: "Cart"}
 });
 
 const UserMongo = mongoose.model('User', UserSchema);

@@ -9,7 +9,7 @@ class UserRoutes {
     }
 
     createRoutes() {
-        this.router.post("/new", UserController.addUser);
+        this.router.post("/", UserController.addUser);
         this.router.delete("/:userId", UserController.deleteUser);
         this.router.put("/:userId", UserController.updateUser);
         this.router.get("/", UserController.getAllUsers);

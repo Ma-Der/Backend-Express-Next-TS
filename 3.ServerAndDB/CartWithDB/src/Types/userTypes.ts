@@ -1,4 +1,5 @@
-import { ICart, ICartData } from "./cartTypes";
+import { ICartData } from "./cartTypes";
+import { ObjectId } from 'mongoose';
 
 export type UserValue = 'name' | 'surname' | 'email' | 'password';
 
@@ -8,7 +9,7 @@ export interface IUserData {
     surname: string;
     email: string;
     password: string;
-    cart: ICart;
+    cart: ObjectId;
 }
 
 export interface IUser {
@@ -17,8 +18,6 @@ export interface IUser {
     surname: string;
     email: string;
     password: string;
-    updateUser(valueToUpdate: UserValue, newValue: string): IUserData;
-    getUserData(): IUserData;
 }
 
 export interface IUserCartData {

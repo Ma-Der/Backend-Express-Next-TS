@@ -1,55 +1,63 @@
 import { Request, Response } from "express";
 import { IUserToAdd, UserValue } from '../Types/userTypes';
 import { UserHandler } from '../Services/userHandler';
+import { ResponseProcessor } from "../Services/ResponseProcessor";
+import { UserValidation } from "../Validation/Validation";
 
 export class UserController {
 
-    public static addUser(req: Request<{}, {}, IUserToAdd>, res: Response) {
+    public static async addUser(req: Request<{}, {}, IUserToAdd>, res: Response) {
         try {
+            const validationResult = await UserValidation.addUser(req.body);
+
             const { name, surname, email, password } = req.body;
-            const newUser = UserHandler.addUser(name, surname, email, password);
+            const newUser = await UserHandler.addUser(name, surname, email, password);
 
-            return res.status(200).json(newUser);
+            return ResponseProcessor.endWithSuccess(res, {message: `User created.`, status: 201, error: false, values: newUser});
         }
         catch(err: any) {
-            return res.status(400).json(err.message);
+            return ResponseProcessor.endWithError(res, {message: err.message, status: 400, error: true});
         }
     }
 
-    public static deleteUser(req: Request<{userId: string}>, res: Response) {    
+    public static async deleteUser(req: Request<{userId: string}>, res: Response) {    
         try {
+            const validationResult = await UserValidation.idSchema(req.params.userId);
+
             const { userId } = req.params;
-            const users = UserHandler.deleteUser(userId);
+            const deletedUser = await UserHandler.deleteUser(userId);
 
-            return res.status(200).json(users);
+            return ResponseProcessor.endWithSuccess(res, {message: `User deleted.`, status: 200, error: false, values: deletedUser});
         }
         catch(err: any) {
-            return res.status(400).json(err.message);
+            return ResponseProcessor.endWithError(res, {message: err.message, status: 400, error: true});
         }
     }
 
-    public static updateUser(req: Request<{ userId: string }, {}, {valueToUpdate: UserValue, newValue: string}>, res: Response) {
+    public static async updateUser(req: Request<{ userId: string }, {}, {userProperty: UserValue, newPropertyValue: string}>, res: Response) {
         try {
+            const validationResult = await UserValidation.updateUser(req.params.userId, req.body.userProperty, req.body.newPropertyValue);
+
             const { userId } = req.params;
-            const { valueToUpdate, newValue } = req.body;
+            const { userProperty, newPropertyValue } = req.body;
 
-            const userToUpdate = UserHandler.updateUser(userId, valueToUpdate, newValue);
+            const userToUpdate = await UserHandler.updateUser(userId, userProperty, newPropertyValue);
 
-            return res.status(200).json(userToUpdate);
+            return ResponseProcessor.endWithSuccess(res, {message: `User updated.`, status: 200, error: false, values: userToUpdate});
         }
         catch(err: any) {
-            return res.status(400).json(err.message);
+            return ResponseProcessor.endWithError(res, {message: err.message, status: 400, error: true});
         }
     }
 
-    public static getAllUsers(req: Request, res: Response) {
+    public static async getAllUsers(req: Request, res: Response) {
         try {
-            const allUsers = UserHandler.showUsers();
+            const allUsers = await UserHandler.showUsers();
 
-            return res.status(200).json(allUsers);
+            return ResponseProcessor.endWithSuccess(res, {message: `All users.`, status: 200, error: false, values: allUsers});
         }   
         catch(err: any) {
-            return res.status(400).json(err.message);
+            return ResponseProcessor.endWithError(res, {message: err.message, status: 404, error: true});
         }
     }
 }
