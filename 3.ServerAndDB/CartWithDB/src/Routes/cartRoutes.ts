@@ -13,9 +13,9 @@ class CartRoutes {
     createRoutes() {
         this.router.post("/:cartId", CartController.addProductToCart);
         this.router.get("/:cartId", CartController.checkCart);
-        this.router.delete("/:cartId/:productId", CartController.deleteProductFromCart); //productId do body
-        this.router.put("/:cartId/:productId", CartController.changeProductAmount);
-        this.router.post("/buy/:cartId", CartController.buyCart);
+        this.router.delete("/:cartId", CartController.deleteProductFromCart); 
+        this.router.put("/:cartId", CartController.changeProductAmount);
+        this.router.put("/buy/:cartId", CartController.buyCart);
         this.router.patch("/discount/:cartId", CartController.addDiscountToCart);
     }
 

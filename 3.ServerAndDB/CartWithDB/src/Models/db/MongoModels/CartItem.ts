@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
+import { ProductSchema } from '../MongoModels/Product';
 
 const Schema = mongoose.Schema;
 
 export const CartItemsSchema = new Schema({
-    cartItemId: {type: String, required: true},
-    productName: {type: String, required: true},
-    productPrice: {type: Number, required: true},
+    id: {type: String, required: true},
+    product: ProductSchema,
     amountOfProduct: {type: Number, required: true}
 });

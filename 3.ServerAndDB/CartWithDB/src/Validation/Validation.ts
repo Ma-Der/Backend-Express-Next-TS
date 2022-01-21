@@ -2,11 +2,71 @@ import Joi from 'joi';
 import { IDiscountCodeData } from '../Types/discountsTypes';
 import { IProductToAdd, ProductProperty } from '../Types/productTypes';
 import { IUserToAdd, UserValue } from '../Types/userTypes';
+import DiscountMongo from '../Models/db/MongoModels/Discount';
 
 export class Validation {
     public static isPositiveNumber(number: number) {
         if(number > 0) return true;
         return false;
+    }
+
+    public static async idSchema(id: string) {
+        const schema = Joi.string().uuid();
+
+        const result = await schema.validateAsync(id);
+        return result;
+    }
+}
+
+export class CartValidation {
+    public static async addProductToCart(cartId: string, productId: string, amountOfProduct: number) {
+        const valCartId = await Validation.idSchema(cartId);
+        const valProductId = await Validation.idSchema(productId);
+        const amountSchema = Joi.number().min(0).integer();
+        const valAmount = await amountSchema.validateAsync(amountOfProduct);
+
+        return {
+            valCartId,
+            valProductId,
+            valAmount
+        }
+    }
+
+    public static async deleteProductFromCart(cartId: string, productId: string) {
+        const valCartId = await Validation.idSchema(cartId);
+        const valProductId = await Validation.idSchema(productId);
+
+        return {
+            valCartId,
+            valProductId
+        }
+    }
+
+    public static async changeProductAmount(cartId: string, productId: string, amount: number) {
+        const valCartId = await Validation.idSchema(cartId);
+        const valProductId = await Validation.idSchema(productId);
+        const amountSchema = Joi.number().min(0).integer();
+        const valAmount = await amountSchema.validateAsync(amount);
+
+        return {
+            valCartId,
+            valProductId,
+            valAmount
+        }
+    }
+
+    public static async addDiscountToCart(cartId: string, discountCode: string) {
+        const valCartId = await Validation.idSchema(cartId);
+        const discountCodes = await DiscountMongo.findOne({discountCode});
+        if(!discountCodes) throw new Error('No such discount code in database.');
+
+        const discountCodeSchema = Joi.string();
+        const valDiscountCode = await discountCodeSchema.validateAsync(discountCode);
+
+        return {
+            valCartId,
+            valDiscountCode
+        }
     }
 }
 
@@ -24,15 +84,8 @@ export class UserValidation {
         return result;
     }
 
-    public static async idSchema(id: string) {
-        const schema = Joi.string().uuid();
-
-        const result = await schema.validateAsync(id);
-        return result;
-    }
-
     public static async updateUser(userId: string, userProperty: UserValue, newValue: string) {
-        const resultId = await this.idSchema(userId);
+        const resultId = await Validation.idSchema(userId);
         const userPropertySchema = Joi.string().allow('name', 'surname', 'email', 'password');
         const resultUserProperty = await userPropertySchema.validateAsync(userProperty);
         const newValueNameSurnameSchema = Joi.string().min(3);
@@ -40,7 +93,7 @@ export class UserValidation {
         const newValuePasswordSchema = Joi.string().min(4);
 
         let resultNewValue = null;
-        
+
         switch(userProperty) {
             case 'name':
                 resultNewValue = await newValueNameSurnameSchema.validateAsync(newValue);
@@ -124,12 +177,5 @@ export class ProductValidation {
             newProductValue: result
         }
         return allResults;
-    }
-
-    public static async idSchema(id: string) {
-        const schema = Joi.string().uuid();
-
-        const result = await schema.validateAsync(id);
-        return result;
     }
 }

@@ -11,10 +11,10 @@ export class DiscountController {
             const { discountCode, discountValue } = req.body;
             const newDiscountCode = await DiscountHandler.createDiscount(discountCode, discountValue);
             
-            return ResponseProcessor.endWithSuccess(res, {message: `New discount code created.`, status: 200, error: false, values: newDiscountCode});
+            return ResponseProcessor.endResponse(res, {message: `New discount code created.`, status: 200, error: false, values: newDiscountCode});
         }
         catch(err: any) {
-            return ResponseProcessor.endWithError(res, {message: err.message, status: 400, error: true});
+            return ResponseProcessor.endResponse(res, {message: err.message, status: 400, error: true});
         }
     }
 
@@ -25,10 +25,10 @@ export class DiscountController {
             const { discountCode, discountValue } = req.body;
             const modifiedDiscount = await DiscountHandler.modifyDiscount(discountCode, discountValue);
 
-            return ResponseProcessor.endWithSuccess(res, {message: 'Discount modified correctly.', status: 200, error: false, values: modifiedDiscount})
+            return ResponseProcessor.endResponse(res, {message: 'Discount modified correctly.', status: 200, error: false, values: modifiedDiscount})
         }
         catch(err: any) {
-            return ResponseProcessor.endWithError(res, {message: err.message, status: 400, error: true});
+            return ResponseProcessor.endResponse(res, {message: err.message, status: 400, error: true});
         }
     }
 
@@ -39,10 +39,10 @@ export class DiscountController {
             const { discountCode } = req.body;
             const discount = await DiscountHandler.deleteDiscount(discountCode);
 
-            return ResponseProcessor.endWithSuccess(res, {message: `Discount deleted.`, status: 200, error: false, values: discount});
+            return ResponseProcessor.endResponse(res, {message: `Discount deleted.`, status: 200, error: false, values: discount});
         }
         catch(err: any) {
-            return ResponseProcessor.endWithError(res, {message: err.message, status: 400, error: true});
+            return ResponseProcessor.endResponse(res, {message: err.message, status: 400, error: true});
         }
     }
 
@@ -50,10 +50,10 @@ export class DiscountController {
         try {
             const discounts = await DiscountHandler.showDiscounts();
 
-            return ResponseProcessor.endWithSuccess(res, {message: `All discounts.`, status: 200, error: false, values: discounts});
+            return ResponseProcessor.endResponse(res, {message: `All discounts.`, status: 200, error: false, values: discounts});
         }
         catch(err: any) {
-            return ResponseProcessor.endWithError(res, {message: err.message, status: 400, error: true});
+            return ResponseProcessor.endResponse(res, {message: err.message, status: 400, error: true});
         }
     }
 }

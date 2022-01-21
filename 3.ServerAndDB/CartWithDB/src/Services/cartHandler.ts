@@ -1,79 +1,111 @@
-import { IProduct } from '../Types/productTypes';
-import { products, carts, discounts } from '../Models/db/database';
-import { IDiscountCode } from '../Types/discountsTypes';
+import CartMongo from '../Models/db/MongoModels/Cart';
+import ProductMongo from '../Models/db/MongoModels/Product';
+import DiscountMongo from '../Models/db/MongoModels/Discount';
 import { ICartData, ICart } from '../Types/cartTypes';
+import { ICartItemData } from '../Types/cartItemTypes';
+import { CartItem } from '../Models/cartItem';
 
 export class CartHandler {
 
-    public static addToCart(cartId: string, productId: string, amount: number): ICartData {
-        const correctCart = this.findCart(cartId) as ICart;
+    public static async addToCart(cartId: string, productId: string, amount: number) {
+        const correctProduct = await ProductMongo.findOne({id: productId});
+        if(!correctProduct) throw new Error('Product does not exist in database.');
+        const newCartItem = new CartItem(correctProduct, amount);
 
-        if(!correctCart) this.throwError('Such cart does not exists.');
-        if(!this.isProductExist(productId)) throw new Error('Product does not exists.')
-        
-        const item = products.find(item => item.id === productId) as IProduct;
-        correctCart.addProduct(item, amount);
+        const cartWithProduct = await CartMongo.findOne({"cartItems.product.id": productId, id: cartId });
 
-        return correctCart.getCartData();
+        if(cartWithProduct) {
+            const correctProductInCart = cartWithProduct.cartItems.filter((cartItem: any) => cartItem.product.id === productId);
+            const newAmountOfProduct = correctProductInCart[0].amountOfProduct + amount;
+            cartWithProduct.cartItems.filter((cartItem: any) => cartItem.product.id === productId).map((item: any) => item.amountOfProduct = newAmountOfProduct);
+            
+            await cartWithProduct.save();
+
+            return cartWithProduct;   
+        } else {
+            const correctCart = await CartMongo.findOneAndUpdate({id: cartId}, {
+                "$push": { "cartItems": newCartItem }
+            }).exec();
+            if(!correctCart) this.throwError('Such cart does not exists.');
+            return correctCart;
+        } 
     }
 
-    public static deleteFromCart(cartId: string, productId: string): ICartData {
-        const cart = this.findCart(cartId) as ICart;
-
-        if(!cart) this.throwError('Such cart does not exists.');
-        
-        cart.deleteProduct(productId);
-        console.log(cart);
-        
-        return cart.getCartData();
+    public static async deleteFromCart(cartId: string, productId: string) {
+        const cartWithProductToDelete = await CartMongo.findOneAndUpdate({id: cartId, "cartItems.product.id": productId}, {
+            "$pull": { "cartItems": {id: {$eq: productId}}}
+        }).exec();
+        if(!cartWithProductToDelete) this.throwError('Such cart does not exists.');
+       
+        return cartWithProductToDelete;
     }
 
-    public static changeAmountInCart(cartId: string, productId: string, amount: number): ICartData {
-        const cart = this.findCart(cartId) as ICart;
-        if(!cart) this.throwError('Such cart does not exists.');
+    public static async changeAmountInCart(cartId: string, productId: string, amount: number) {
 
-        cart.modifyAmountOfProductInCart(productId, amount);
-        return cart.getCartData();
+        const cartWithProductToChangeAmount = await CartMongo.findOneAndUpdate({id: cartId, "cartItems.product.id": productId}, {
+            "$set": {"cartItems.$.amountOfProduct": amount}
+        }).exec();
+
+        if(!cartWithProductToChangeAmount) this.throwError('Such cart does not exists.');
+
+        return cartWithProductToChangeAmount;
     }
 
-    public static buyCart(cartId: string) {
-        const cart = this.findCart(cartId) as ICart;
+    public static async buyCart(cartId: string) {
+        const cart = await CartMongo.findOne({id: cartId});
         if(!cart) this.throwError('Cart does not exist.');
 
-        const cartItems = cart.getCartData();
-        const cartPrice = cart.calculateCart();
-        cart.clearCart();
-        return {cartItems, cartPrice};
+        const cartPrice = this.calculateCart(cart);
+        const cartItems = cart.cartItems.map((item: ICartItemData) => { 
+            return { product: item.product.productName, price: item.product.productPrice}
+    });
+        const cartPriceWithDiscount = this.calculateCartWithDiscount(cart, cartPrice);
+        await this.clearCart(cartId);
+        return {cartItems, cartPrice: parseFloat(cartPrice.toFixed(2)), cartPriceWithDiscount: parseFloat(cartPriceWithDiscount.toFixed(2))};
     }
 
-    public static checkCart(cartId: string) {
-        const cart = this.findCart(cartId) as ICart;
+    public static async checkCart(cartId: string) {
+        const cart = await CartMongo.findOne({id: cartId}); 
         if(!cart) this.throwError('Cart does not exist.');
-
-        return cart.getCartData();
-    }
-
-    public static addDiscountToCart(cartId: string, discountCodeKey: string): ICartData {
         
-        const cart = this.findCart(cartId) as ICart;
-        if(!cart) this.throwError('Cart does not exist.');
+        return cart;
+    }
 
-        const searchedDiscount = discounts.find(({discountCode}) => discountCode === discountCodeKey) as IDiscountCode;
+    public static async addDiscountToCart(cartId: string, discountCode: string) {
+        const searchedDiscount = await DiscountMongo.findOne({discountCode: discountCode})
         if(!searchedDiscount) this.throwError("Entered discount does not exists in database.");
 
-        cart.addDiscountCode(searchedDiscount);
-        
-        return cart.getCartData();
+        const cart = await CartMongo.findOneAndUpdate({id: cartId}, {
+            "discountCode.discountCode": searchedDiscount.discountCode,
+            "discountCode.discountValue": searchedDiscount.discountValue
+        });
+        if(!cart) this.throwError('Cart does not exist.');
+
+        return cart;
+   }
+
+    private static calculateCart(cart: ICartData): number {
+        const finalPrice = cart.cartItems.reduce((totalPrice, cartItem) => {
+            totalPrice += this.calculatePrice(cartItem.product.productPrice, cartItem.amountOfProduct);
+            return totalPrice;
+        }, 0);
+        return finalPrice;
     }
 
-    private static isProductExist(id: string): Boolean {
-        const element = products.find(item => item.id === id);
-        if(element) return true;
-        return false;
+    private static calculateCartWithDiscount(cart: ICartData, cartPrice: number): number {
+        return (cartPrice - (cartPrice * cart.discountCode.discountValue));
     }
 
-    private static findCart(cartId: string) {
-        return carts.find(({id}) => id === cartId);
+    private static calculatePrice(productPrice: number, amountOfProduct: number): number {
+        return productPrice * amountOfProduct;
+    } 
+
+    private static async clearCart(cartId: string) {
+        const clearedCart = await CartMongo.findOneAndUpdate({id: cartId}, {
+            $set: { cartItems: []}
+        });
+
+        return clearedCart;
     }
 
     private static throwError(message: string) {

@@ -23,8 +23,7 @@ export class CartItem implements ICartItem{
     getCartItemData(): ICartItemData {
         return {
             cartItemId: this.id,
-            productName: this.product.productName,
-            productPrice: this.product.productPrice,
+            product: this.product,
             amountOfProduct: this.amountOfProduct
         }
     }

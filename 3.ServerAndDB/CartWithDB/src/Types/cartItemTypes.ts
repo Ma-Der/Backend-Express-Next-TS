@@ -11,7 +11,6 @@ export interface ICartItem {
 
 export interface ICartItemData {
     cartItemId: string;
-    productName: string;
-    productPrice: number;
+    product: IProductData;
     amountOfProduct: number;
 }

@@ -1,83 +1,96 @@
 import { Request, Response } from 'express';
 import { CartHandler } from '../Services/cartHandler';
+import { ResponseProcessor } from '../Services/ResponseProcessor';
+import { CartValidation, Validation } from '../Validation/Validation';
 
 export class CartController {
-// brak walidacjji
-    public static addProductToCart(req: Request<{ cartId: string }, {}, { productId: string, amountOfProduct: number }>, res: Response) {
+    public static async addProductToCart(req: Request<{ cartId: string }, {}, { productId: string, amountOfProduct: string }>, res: Response) {
         try {
+            const validationResult = await CartValidation.addProductToCart(req.params.cartId, req.body.productId, parseInt(req.body.amountOfProduct));
+            
             const { cartId } = req.params;
             const { productId, amountOfProduct } = req.body;
+           
+            const result = await CartHandler.addToCart(cartId, productId, parseInt(amountOfProduct));
 
-            if(typeof amountOfProduct === 'string') {
-                const amount = parseFloat(amountOfProduct);
-                const result = CartHandler.addToCart(cartId, productId, amount);    
-                return res.status(200).json(result);
-            }
-            
-            const result = CartHandler.addToCart(cartId, productId, amountOfProduct);
-            return res.status(200).json(result);
+            return ResponseProcessor.endResponse(res, {message: `Product succesfully added to cart.`, status: 201, error: false, values: result});
         }
         catch (err: any) {
-            return res.status(400).json(err.message);
+            return ResponseProcessor.endResponse(res, {message: err.message, status: 400, error: true});
         }
     }
 
-    public static deleteProductFromCart(req: Request<{ cartId: string, productId: string }>, res: Response) {
+    public static async deleteProductFromCart(req: Request<{ cartId: string }, {}, {productId: string}>, res: Response) {
         try {
-            const { cartId, productId } = req.params;
+            const validationResult = await CartValidation.deleteProductFromCart(req.params.cartId, req.body.productId);
+
+            const { cartId } = req.params;
+            const { productId } = req.body;
             const result = CartHandler.deleteFromCart(cartId, productId);
-            return res.status(200).json(result);
+
+            return ResponseProcessor.endResponse(res, {message: `Product succesfully deleted from cart.`, status: 200, error: false, values: result});
         }
         catch (err: any) {
-            return res.status(400).json(err.message);
+            return ResponseProcessor.endResponse(res, {message: err.message, status: 400, error: true});
         }
     }
 
-    public static changeProductAmount(req: Request<{ cartId: string, productId: string }, {}, { amount: number }>, res: Response) {
+    public static async changeProductAmount(req: Request<{ cartId: string }, {}, { amount: string, productId: string }>, res: Response) {
         try {
-            const { cartId, productId } = req.params;
-            const { amount } = req.body;
-            const result = CartHandler.changeAmountInCart(cartId, productId, amount);
+            
+            const validationResult = await CartValidation.changeProductAmount(req.params.cartId, req.body.productId, parseInt(req.body.amount));
+            
+            const { cartId } = req.params;
+            const { amount, productId } = req.body;
 
-            return res.status(200).json(result);
+            const result = await CartHandler.changeAmountInCart(cartId, productId, parseInt(amount));
+
+            return ResponseProcessor.endResponse(res, {message: `Amoount in cart succesfully updated.`, status: 200, error: false, values: result});
         }
         catch (err: any) {
-            return res.status(400).json(err.message);
+            return ResponseProcessor.endResponse(res, {message: err.message, status: 400, error: true});
         }
     }
 
-    public static checkCart(req: Request<{ cartId: string }>, res: Response) {
+    public static async checkCart(req: Request<{ cartId: string }>, res: Response) {
         try {
             const { cartId } = req.params;
-            const cartData = CartHandler.checkCart(cartId);
-            return res.status(200).json(cartData);
+            const cartData = await CartHandler.checkCart(cartId);
+            
+            return ResponseProcessor.endResponse(res, {message: `Cart found.`, status: 200, error: false, values: cartData});
         }
         catch (err: any) {
-            return res.status(400).json(err.message);
+            return ResponseProcessor.endResponse(res, {message: err.message, status: 400, error: true});
         }
     }
 
-    public static buyCart(req: Request<{ cartId: string }>, res: Response) {
+    public static async buyCart(req: Request<{ cartId: string }>, res: Response) {
         try {
+            const validationResult = await Validation.idSchema(req.params.cartId);
+
             const { cartId } = req.params;
-            const cartProducts = CartHandler.buyCart(cartId);
-            return res.status(200).json(cartProducts);
+            const cartProducts = await CartHandler.buyCart(cartId);
+
+            return ResponseProcessor.endResponse(res, {message: `Cart boughted.`, status: 200, error: false, values: cartProducts});
         }
         catch (err: any) {
-            return res.status(400).json(err.message);
+            return ResponseProcessor.endResponse(res, {message: err.message, status: 400, error: true});
         }
     }
 
-    public static addDiscountToCart(req: Request<{ cartId: string }, {}, {discountCodeKey: string}>, res: Response) {
+    public static async addDiscountToCart(req: Request<{ cartId: string }, {}, {discountCode: string}>, res: Response) {
         try {
-            const { cartId } = req.params;
-            const { discountCodeKey } = req.body;
-            const cartWithDiscount = CartHandler.addDiscountToCart(cartId, discountCodeKey);
+            const validationResult = await CartValidation.addDiscountToCart(req.params.cartId, req.body.discountCode);
 
-            return res.status(200).json(cartWithDiscount);
+            const { cartId } = req.params;
+            const { discountCode } = req.body;
+
+            const cartWithDiscount = await CartHandler.addDiscountToCart(cartId, discountCode);
+
+            return ResponseProcessor.endResponse(res, {message: `Discount added to cart.`, error: false, status: 200, values: cartWithDiscount});
         }
         catch(err: any) {
-            return res.status(400).json(err.message);
+            return ResponseProcessor.endResponse(res, {message: err.message, error: true, status: 400});
         }
-    }
+   }
 }
