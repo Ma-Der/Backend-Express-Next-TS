@@ -4,12 +4,12 @@ import { ResponseProcessor } from '../Utils/ResponseProcessor';
 import { HeartValidation } from '../Validation/validation';
 
 export class HeartController {
-    public static async getCard(req: Request<{}, {}, {cardName: string}>, res: Response) {
+    public static async getCard(req: Request<{cardName: string}>, res: Response) {
         try {
-            const validationResult = await HeartValidation.getCard(req.body.cardName);
+            const validationResult = await HeartValidation.getCard(req.params.cardName);
             
-            const { cardName } = req.body;
-
+            const { cardName } = req.params;
+            console.log(cardName)
             const searchedCard = await HeartHandler.getCard(cardName);
 
             return ResponseProcessor.endResponse(res, {message: 'Card served', error: false, status: 200, values: searchedCard});

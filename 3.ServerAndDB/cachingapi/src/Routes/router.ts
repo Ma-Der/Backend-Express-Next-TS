@@ -9,7 +9,7 @@ class HeartRouter {
     }
 
     createRoutes() {
-        this.router.get("/", HeartController.getCard);
+        this.router.get("/:cardName", HeartController.getCard);
     }
 }
 
