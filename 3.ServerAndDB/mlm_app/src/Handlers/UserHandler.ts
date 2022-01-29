@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { UserModel } from '../models/user';
 import { TUserToUpdate } from '../Types/userTypes';
+import { getPoints } from '../Services/pointsCount';
 import bcrypt from 'bcrypt';
 
 export class UserHandler {
@@ -26,6 +27,7 @@ export class UserHandler {
                     userId: referrerId
                 }
             });
+
             if(!referrerUser) throw new Error('Referrer user does not exist.');
 
             const user = new UserModel(username, encryptedPassword, '', referrerId);
@@ -35,6 +37,17 @@ export class UserHandler {
             });
     
             if(!newUser) throw new Error('User could not be created.');
+
+            await getPoints(newUser, 10);
+
+            const updatedInferiorsInReferrerUser = await this.prisma.user.update({
+                where: {
+                    userId: referrerId
+                },
+                data: {
+                    inferiors: { push: newUser.userId }
+                }
+            });
     
             return newUser;
         }

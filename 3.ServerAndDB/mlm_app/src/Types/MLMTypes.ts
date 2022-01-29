@@ -1,12 +1,9 @@
-
-export type TUserToUpdate = 'username' | 'password';
-
-export interface IUser {
+export interface IUserMLM {
     id: number;
     userId: string;
     username: string;
     password: string;
-    points: number;
     inferiors: string[];
+    points: number;
     referrer: string;
 }

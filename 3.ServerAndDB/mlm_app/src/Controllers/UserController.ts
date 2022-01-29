@@ -7,7 +7,7 @@ import { TUserToUpdate } from '../Types/userTypes';
 export class UserController {
     public static async getUser(req: Request<{id: string}>, res: Response) {
         try {
-            const validationResult = Validation.id(req.params.id);
+            const validationResult = await Validation.id(req.params.id);
 
             const { id } = req.params;
 
@@ -24,11 +24,12 @@ export class UserController {
         try {
             const { username, password } = req.body;
             const { referrerId } = req.query;
+            console.log(referrerId)
 
-            const usernameValidation = Validation.username(username);
-            const passwordValidation = Validation.password(password);
+            const usernameValidation = await Validation.username(username);
+            const passwordValidation = await Validation.password(password);
             if(referrerId) {
-                const referrerValidation = Validation.id(referrerId);
+                const referrerValidation = await Validation.id(referrerId);
             }
 
             if(referrerId) {
@@ -49,12 +50,12 @@ export class UserController {
             const { userId } = req.params;
             const { propertyToChange, newValue } = req.body;
 
-            const idValidation = Validation.id(userId);
-            const propertyValidation = Validation.propertyToChange(propertyToChange);
+            const idValidation = await Validation.id(userId);
+            const propertyValidation = await Validation.propertyToChange(propertyToChange);
             if(propertyToChange === 'password') {
-                const newValueValidation = Validation.password(newValue);
+                const newValueValidation = await Validation.password(newValue);
             }
-            const newValueValidation = Validation.username(newValue);
+            const newValueValidation = await Validation.username(newValue);
             
             const updatedUser = await UserHandler.updateUser(userId, propertyToChange, newValue);
 
@@ -68,7 +69,7 @@ export class UserController {
     public static async deleteUser(req: Request<{userId: string}>, res: Response) {
         try {
             const { userId } = req.params;
-            const idValidation = Validation.id(userId);
+            const idValidation = await Validation.id(userId);
 
             const deletedUser = await UserHandler.deleteUser(userId);
 

@@ -9,7 +9,7 @@ class MLMRoutes {
     }
 
     createRoutes() {
-        this.router.get("/mlm", MLMController.getStartPage);
+        this.router.get("/mlm", MLMController.loggedIn);
         this.router.get("/fail", MLMController.getFailPage);
         this.router.post("/reflink", MLMController.generateRefLink);
     }

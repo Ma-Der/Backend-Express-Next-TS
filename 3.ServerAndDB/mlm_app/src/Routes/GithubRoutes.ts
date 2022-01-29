@@ -11,7 +11,7 @@ class GithubRoutes {
 
     createRoutes() {
         this.router.get("/auth/github", passport.authenticate('github'));
-        this.router.get("/github/callback", passport.authenticate('github', { failureRedirect: "/fail" }), MLMController.getStartPage);
+        this.router.get("/github/callback", passport.authenticate('github', { failureRedirect: "/fail" }), MLMController.loggedIn);
     }
 }
 
