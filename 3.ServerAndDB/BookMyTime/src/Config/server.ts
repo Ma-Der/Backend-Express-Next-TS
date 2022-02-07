@@ -1,6 +1,7 @@
 import express, { Express } from 'express';
-import { port } from './envVar';
+import { port, scopes } from './envVar';
 import calendarRoutes from '../Routes/CalendarRoutes';
+import googleOAuthRoutes from '../Routes/GoogleOAuthRoutes';
 
 export const initializeServer = () => {
     const app = express();
@@ -8,7 +9,8 @@ export const initializeServer = () => {
     app.use(express.json());
 
     app.use("/", calendarRoutes.router);
-    
+    app.use("/google", googleOAuthRoutes.router);
+    console.log(scopes)
     startServer(app);
     return app;
 }
