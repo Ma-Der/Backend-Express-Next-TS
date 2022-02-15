@@ -14,20 +14,28 @@ export class GoogleOAuthHandler {
         const token = await oAuth2Client.getToken(code);
         oAuth2Client.setCredentials(token.tokens);
         const authCredentialsTokens = token.tokens;
-        
-        
-/*
+
         if(authCredentialsTokens.refresh_token) {
-            const authCredentials = await this.prisma.auth.create({ data: {
-                access_token: authCredentialsTokens.access_token as string,  
-                refresh_token: authCredentialsTokens.refresh_token as string, 
-                scope: authCredentialsTokens.scope as string,         
-                token_type: authCredentialsTokens.token_type as string,    
-                expiry_date: authCredentialsTokens.expiry_date as number   
-            } });
+            const userInfo = (await google.oauth2({version: 'v2', auth: oAuth2Client }).userinfo.get()).data;
+            const userEmail = userInfo.email;
+            if(!userEmail) throw new Error('No user email.');
+
+            const authCredentials = await this.prisma.auth.upsert({
+                create: {
+                    email: userEmail,
+                    refresh_token: authCredentialsTokens.refresh_token as string
+                },
+                update: {
+                    refresh_token: authCredentialsTokens.refresh_token as string
+                },
+                where: {
+                    email: userEmail
+                }
+            });
+
+            return { authCredentialsTokens, userEmail };
         }
-*/
-        return { oAuth2Client };
+        return { authCredentialsTokens };
     }
 
     public static generateAuthUrl(oAuth2Client: Auth.OAuth2Client) {

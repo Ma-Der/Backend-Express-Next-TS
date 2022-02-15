@@ -9,21 +9,16 @@ datasource db {
 
 model Auth {
   id            Int    @id @default(autoincrement())
-  userId        String @unique
-  access_token  String
+  email        String @unique
   refresh_token String
-  scope         String
-  token_type    String
-  expiry_date   Int
 }
 
 model Event {
   id             Int      @id @default(autoincrement())
+  eventId        String @unique
   summary        String
   location       String
   description    String
   eventStartTime DateTime
-  startTimeZone  String
   eventEndTime   DateTime
-  endTimeZone    String
 }

@@ -8,6 +8,7 @@ export class GoogleAuthController {
         try {
             const { code } = req.query;
             const oAuth2Client = GoogleOAuthHandler.getGoogleOAuth2Client(googleClientId, googleClientSecret, googleCallbackURL);
+            
             const credentials = await GoogleOAuthHandler.getOAuthCredentials(oAuth2Client, code);
 
             return ResponseProcessor.endResponse(res, {message: `Credentials created.`, status: 201, error: false, values: credentials});
