@@ -7,31 +7,32 @@ import { CalendarDBHandler } from './CalendarDBHandler';
 export class GoogleCalendarHandler {    
     public static async createEvent(email: string, eventData: IDataToCreateEvent) {
         const oAuth2Client = await this.getOAuth2Client(email);
-        google.options({auth: oAuth2Client});
-        const calendar = google.calendar({version: "v3"});
         
+        google.options({auth: oAuth2Client});
+        const calendar = google.calendar("v3");
         const event = {
             summary: eventData.summary,
             description: eventData.description,
             location: eventData.location,
             colorId: '5',
             start: {
-                dateTime: eventData.startTime
+                dateTime: new Date(eventData.startTime).toISOString(),
             },
             end: {
-                dateTime: eventData.endTime
+                dateTime: new Date(eventData.endTime).toISOString(),
             }
         }
 
         const createdEvent = await calendar.events.insert({calendarId: 'primary', requestBody: event});
+        if(!createdEvent) throw new Error("Event not created.");
 
         const eventToDB = {
-            eventId: createdEvent.data.id,
-            summary: createdEvent.data.summary,
-            description: createdEvent.data.description,
-            location: createdEvent.data.location,
-            startTime: createdEvent.data.start.toString(),
-            endTime: createdEvent.data.end.toString()
+            eventId: createdEvent.data.id as string,
+            summary: createdEvent.data.summary as string,
+            description: createdEvent.data.description as string,
+            location: createdEvent.data.location as string,
+            startTime: event.start.dateTime,
+            endTime: event.end.dateTime
         }
 
         const newEventToDB = await CalendarDBHandler.createEvent(eventToDB);
@@ -69,7 +70,7 @@ export class GoogleCalendarHandler {
         return deletedEventInGoogle.data;
     }
 
-    private static async getOAuth2Client(email: string) {
+    public static async getOAuth2Client(email: string) {
         const prisma = new PrismaClient();
         const oAuth2Client = new google.auth.OAuth2(googleClientId, googleClientSecret);
         const credentials = await prisma.auth.findFirst({

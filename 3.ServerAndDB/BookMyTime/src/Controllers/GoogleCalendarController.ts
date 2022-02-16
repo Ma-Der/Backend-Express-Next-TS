@@ -2,11 +2,15 @@ import { Request, Response } from 'express';
 import { GoogleCalendarHandler } from '../Handlers/GoogleCalendarHandler';
 import { ResponseProcessor } from '../Services/ResponseProcessor';
 import { IDataToCreateEvent, IDataToUpdateEvent } from '../Types/calendarTypes';
+import { EventValidation } from '../Validation/eventValidation';
 
 export class GoogleCalendarController {
     public static async createEvent(req: Request<{}, {}, {email: string, eventData: IDataToCreateEvent}>, res: Response) {
         try {
             const { email, eventData } = req.body;
+            const eventValidation = await EventValidation.eventValidation(email, eventData);
+
+            if(eventValidation.busy) return ResponseProcessor.endResponse(res, {message: eventValidation.message, error: false, status: 200});
 
             const createdEvent = await GoogleCalendarHandler.createEvent(email, eventData);
 
@@ -21,6 +25,11 @@ export class GoogleCalendarController {
         try {
             const { email, eventData } = req.body;
             const { eventId } = req.params;
+            
+            const eventIdValidation = EventValidation.idValidation(eventId);
+            const eventValidation = await EventValidation.eventValidation(email, eventData);
+
+            if(eventValidation.busy) return ResponseProcessor.endResponse(res, {message: eventValidation.message, error: false, status: 200});
 
             const updatedEvent = await GoogleCalendarHandler.editEvent(email, eventId, eventData);
 
@@ -35,6 +44,9 @@ export class GoogleCalendarController {
         try {
             const { eventId } = req.params;
             const { email } = req.body;
+
+            const eventIdValidation = EventValidation.idValidation(eventId);
+            const emailValidation = EventValidation.emailValidation(email);
 
             const deletedEvent = await GoogleCalendarHandler.deleteEvent(email, eventId);
 

@@ -10,7 +10,6 @@ export const initializeServer = () => {
 
     app.use("/", calendarRoutes.router);
     app.use("/google", googleOAuthRoutes.router);
-    console.log(scopes)
     startServer(app);
     return app;
 }

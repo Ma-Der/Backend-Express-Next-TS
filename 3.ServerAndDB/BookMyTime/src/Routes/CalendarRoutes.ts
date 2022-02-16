@@ -13,7 +13,7 @@ class CalendarRoutes {
         this.router.get("/", CalendarDBController.getEvents);
         this.router.post("/", GoogleCalendarController.createEvent);
         this.router.patch("/:eventId", GoogleCalendarController.editEvent);
-        this.router.delete("/:evventId", GoogleCalendarController.deleteEvent);
+        this.router.delete("/:eventId", GoogleCalendarController.deleteEvent);
     }
 }
 
