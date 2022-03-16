@@ -1,27 +1,22 @@
-import express, { Express } from 'express';
-import graphqlSchema from '../GraphQL/schema';
-import { graphqlHTTP } from 'express-graphql';
+import { ApolloServer } from 'apollo-server';
+import { PrismaClient } from '@prisma/client';
+import typeDefs from '../schema/schema';
+import resolvers from '../schema/resolvers';
 import dotenv from 'dotenv';
 dotenv.config();
 
 const port = process.env.PORT;
 
+export const initializeServer = () => {
+    const client = new PrismaClient();
+    const server = new ApolloServer({ typeDefs, resolvers, context: () => {
+        return client;
+    } });
 
-export const initializeServer = (): Express => {
-    const app = express();
-    
-    app.use("/graphql", graphqlHTTP({
-        schema: graphqlSchema,
-        graphiql: true
-    }))
-
-    startServer(app);
-    return app;
+    server.listen().then(({url}) => {
+        console.log(`Project running at: ${url}`);
+    });
 }
 
-const startServer = (server: Express) => {
-    server.listen(port, () => {
-        console.log(`Server started on port: ${port}`);
-    })
-}
+
 
