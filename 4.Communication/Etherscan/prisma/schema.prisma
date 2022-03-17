@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Etherscan {
+  id          Int            @unique @default(autoincrement())
+  etherPrice  String
+  marketCap   String
+  difficulty  String
+  medGasPrice String
+  transaction Transactions[]
+}
+
+model Transactions {
+  id                    Int        @unique @default(autoincrement())
+  from                  String
+  to                    String
+  gasPriceInTransaction String
+  tax                   String
+  Etherscan             Etherscan? @relation(fields: [etherscanId], references: [id])
+  etherscanId           Int?
+}
