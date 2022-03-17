@@ -19,9 +19,9 @@ const typeDefs = gql`
     }
 
     type Query {
-        etherscanFullData: [EtherscanData!]!
+        etherscanFullData(numberOfResults: Int): [EtherscanData!]!
         etherscanData(id: Int!): EtherscanData!
-        transactions: [Transaction!]!
+        transactions(numberOfResults: Int): [Transaction!]!
         transaction(id: Int!): Transaction!
     }
 `

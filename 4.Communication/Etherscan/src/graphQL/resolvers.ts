@@ -2,8 +2,14 @@ import { PrismaClient } from "@prisma/client";
 
 const resolvers = {
     Query: {
-        etherscanFullData: async (_parent: unknown, _args: unknown, context: PrismaClient) => {
+        etherscanFullData: async (_parent: unknown, args: {numberOfResults?: number}, context: PrismaClient) => {
+            const { numberOfResults } = args;
             const fullData = await context.etherscan.findMany({});
+            if(numberOfResults) {
+                const data = fullData.slice(0, numberOfResults+1);
+                return data;
+            }
+
             return fullData;
         },
         etherscanData: async (_parent: unknown, args: {id: number}, context: PrismaClient) => {
@@ -16,8 +22,13 @@ const resolvers = {
 
             return etherscan;
         },
-        transactions: async (_parent: unknown, _args: unknown, context: PrismaClient) => {
+        transactions: async (_parent: unknown, args: {numberOfResults?: number}, context: PrismaClient) => {
+            const { numberOfResults } = args;
             const fullData = await context.transactions.findMany({});
+            if(numberOfResults) {
+                const data = fullData.slice(0, numberOfResults+1);
+                return data;
+            }
             return fullData;
         },
         transaction: async (_parent: unknown, args: {id: number}, context: PrismaClient) => {
