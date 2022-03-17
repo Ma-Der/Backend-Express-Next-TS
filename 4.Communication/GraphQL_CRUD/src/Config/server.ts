@@ -5,8 +5,6 @@ import resolvers from '../schema/resolvers';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const port = process.env.PORT;
-
 export const initializeServer = () => {
     const client = new PrismaClient();
     const server = new ApolloServer({ typeDefs, resolvers, context: () => {
