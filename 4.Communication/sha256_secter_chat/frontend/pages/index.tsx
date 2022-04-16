@@ -1,11 +1,17 @@
 import type { NextPage } from 'next'
 import SocketProvider, { useSockets } from '../context/socket.context'
-
+import RoomsContainer from '../containers/Rooms';
+import MessagesContainer from '../containers/Messages';
 
 const Home: NextPage = () => {
-  const { socket } = useSockets();
+  const { socket, username, setUsername } = useSockets();
   return (
-    <div>{socket.id}</div>
+    <div>
+      <RoomsContainer />
+      <MessagesContainer />
+
+
+    </div>
   )
 }
 
