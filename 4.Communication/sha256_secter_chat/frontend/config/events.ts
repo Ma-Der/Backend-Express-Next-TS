@@ -10,3 +10,5 @@ export const EVENTS = {
         ROOM_MESSAGE: 'ROOM_MESSAGE',
     }
 }
+
+export default EVENTS;
